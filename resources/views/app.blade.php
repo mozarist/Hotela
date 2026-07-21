@@ -30,8 +30,7 @@
             }
         </style>
 
-        <link rel="icon" href="/favicon.ico" sizes="any">
-        <link rel="icon" href="/assets/CleanLab-Logo.svg" type="image/svg+xml">
+        <link rel="icon" href="{{ asset('assets/Hotela-Logo.svg') }}?v={{ filemtime(public_path('assets/Hotela-Logo.svg')) }}" type="image/svg+xml" sizes="any">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
         @fonts
