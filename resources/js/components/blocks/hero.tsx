@@ -18,16 +18,8 @@ export default function HeroSection() {
           </Button>
         </div>
       </div>
-      <div className="flex-1 grid grid-cols-4 gap-1 h-full">
-        <div className="h-full w-full overflow-hidden col-span-2">
-          <img src="https://images.unsplash.com/photo-1549294413-26f195200c16?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aG90ZWx8ZW58MHx8MHx8fDA%3D" alt="" className="bg-muted w-full h-full object-cover" />
-        </div>
-        <div className="h-full w-full overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="bg-muted w-full h-full object-cover" />
-        </div>
-        <div className="h-full w-full overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1629140727571-9b5c6f6267b4?q=80&w=327&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="bg-muted w-full h-full object-cover" />
-        </div>
+      <div className="flex-1 h-full w-full rounded-2xl overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="bg-muted w-full h-full object-cover" />
       </div>
     </div>
   )
