@@ -3,18 +3,18 @@ import { Button } from '../ui/button'
 
 export default function HeroSection() {
   return (
-    <div className="w-screen h-screen flex items-center justify-between p-16">
-      <div className="flex-1 flex flex-col gap-6">
-        <h1 className="text-7xl text-primary font-serif tracking-tight max-w-lg">Moments worth staying for.</h1>
-        <p className="text-muted-foreground max-w-lg">
-          Experience the perfect blend of comfort, luxury, and convenience at our hotel. Whether you're here for business or leisure, we provide an unforgettable stay that caters to your every need.
+    <div className="w-screen h-screen flex flex-col md:flex-row items-center justify-between gap-6 md:gap-0 p-5 py-24 md:p-16 md:py-16">
+      <div className="flex-1 flex flex-col items-center md:items-start gap-6">
+        <h1 className="text-7xl md:text-6xl lg:text-7xl xl:text-8xl text-primary text-center md:text-start font-serif tracking-tight max-w-lg">Moments worth staying for.</h1>
+        <p className="text-muted-foreground text-center md:text-start max-w-md">
+          Discover thoughtfully designed rooms, warm hospitality, and a stay where comfort meets timeless elegance.
         </p>
         <div className="flex items-center gap-1">
           <Button variant="outline">
-            <CircleArrowRight /> View Our Services
+            <CircleArrowRight /> Explore Our Rooms
           </Button>
           <Button>
-            <CircleArrowRight /> Book a Room
+            <CircleArrowRight /> Book Now
           </Button>
         </div>
       </div>
