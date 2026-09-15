@@ -22,10 +22,10 @@ const services = [
 export default function OurServices() {
         return (
             <div className="w-full">
-                <div className="flex flex-col gap-6 container mx-auto px-4">
+                <div className="flex flex-col gap-6 max-w-7xl mx-auto px-4 w-full">
                     <div className="flex items-center justify-between gap-6 w-full">
                         <div className="border w-full" />
-                        <h2 className="text-5xl md:text-6xl lg:text-7xl text-center font-serif min-w-sm">What We Offer</h2>
+                        <h2 className="text-5xl md:text-4xl lg:text-5xl text-center font-serif min-w-sm">What We Offer</h2>
                         <div className="border w-full" />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">

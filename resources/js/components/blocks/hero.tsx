@@ -3,9 +3,11 @@ import { Button } from '../ui/button'
 
 export default function HeroSection() {
   return (
-    <div className="w-screen h-screen flex flex-col md:flex-row items-center justify-between gap-6 md:gap-0 p-5 py-24 md:p-16 md:py-16">
+    <div className="max-w-7xl mx-auto w-full min-h-fit flex flex-col md:flex-row items-center justify-between gap-6 md:gap-0 px-4">
       <div className="flex-1 flex flex-col items-center md:items-start gap-6">
-        <h1 className="text-7xl md:text-6xl lg:text-7xl xl:text-8xl text-primary text-center md:text-start font-serif tracking-tight max-w-lg">Moments worth staying for.</h1>
+        <h1 className="text-7xl md:text-6xl lg:text-7xl xl:text-8xl text-primary text-center md:text-start font-serif tracking-tight max-w-lg">
+          Moments worth staying for.
+        </h1>
         <p className="text-muted-foreground text-center md:text-start max-w-md">
           Discover thoughtfully designed rooms, warm hospitality, and a stay where comfort meets timeless elegance.
         </p>

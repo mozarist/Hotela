@@ -16,13 +16,13 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Customers
-    Route::resource('customers', CustomerController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('dashboard/customers', CustomerController::class)->only(['index', 'store', 'update', 'destroy']);
 
     // Services
-    Route::resource('services', ServiceController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('dashboard/services', ServiceController::class)->only(['index', 'store', 'update', 'destroy']);
 
     // Transactions
-    Route::resource('transactions', TransactionController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('dashboard/transactions', TransactionController::class)->only(['index', 'store', 'update', 'destroy']);
 });
 
 require __DIR__.'/settings.php';
