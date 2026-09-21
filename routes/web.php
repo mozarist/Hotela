@@ -11,6 +11,11 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
+
+Route::get('/booking', function () {
+    return Inertia::render('booking');
+})->name('booking');
+
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     // Dashboard
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
