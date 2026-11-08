@@ -1,35 +1,54 @@
-import { BedDouble, Search, Star } from "lucide-react";
-import { Badge } from "../badge";
-import { Button } from "../button";
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../card";
-import { Link } from "@inertiajs/react";
+import { Link } from '@inertiajs/react';
+import { BedDouble, Sparkles } from 'lucide-react';
+import RoomImage from '@/components/hotel/room-image';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatCurrency } from '@/lib/format';
+import { booking } from '@/routes';
+import type { Room } from '@/types/hotel';
 
-export default function RoomCard() {
+export default function RoomCard({ room }: { room: Room }) {
     return (
-        <Link href="/rooms/1" className="w-full">
-            <Card className="relative pt-0">
-                <div className="w-full h-40 bg-muted overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" className="w-full h-full object-cover object-center" />
-                </div>
-                <div className="absolute top-3 right-3">
-                    <Badge variant="secondary"><Star className="fill-yellow-400 text-yellow-400" />4.8</Badge>
-                </div>
-                <CardHeader>
-                    <CardTitle>Room Title</CardTitle>
-                    <CardDescription>Room description goes here.</CardDescription>
-                </CardHeader>
-                <CardFooter>
-                    <div className="w-full flex items-center justify-between">
-                        <span className="text-base font-semibold">$100/night</span>
-                        <CardAction>
-                            <Button>
-                                <BedDouble />
-                                Book Now
-                            </Button>
-                        </CardAction>
+        <Card className="group pt-0 transition-shadow hover:ring-foreground/20 hover:shadow-lg">
+            <div className="relative h-52 overflow-hidden">
+                <RoomImage
+                    src={room.image_url}
+                    alt={`${room.name} room`}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/50 to-transparent" />
+                <Badge variant="secondary" className="absolute top-3 left-3">
+                    <Sparkles className="size-3" />
+                    Signature stay
+                </Badge>
+            </div>
+
+            <CardHeader>
+                <div className="flex items-start justify-between gap-3">
+                    <div>
+                        <CardTitle className="text-xl">{room.name} Room</CardTitle>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                            {formatCurrency(room.price)} / night
+                        </p>
                     </div>
-                </CardFooter>
-            </Card>
-        </Link>
-    )
+                    <BedDouble className="mt-1 size-5 text-muted-foreground" />
+                </div>
+            </CardHeader>
+
+            <CardContent>
+                <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                    {room.description}
+                </p>
+            </CardContent>
+
+            <CardFooter>
+                <Button asChild className="w-full">
+                    <Link href={booking.url({ query: { room: room.id } })}>
+                        Book this room
+                    </Link>
+                </Button>
+            </CardFooter>
+        </Card>
+    );
 }

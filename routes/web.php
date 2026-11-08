@@ -1,33 +1,21 @@
 <?php
 
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
+Route::get('/', [RoomController::class, 'index'])->name('home');
 
+Route::get('/booking', [BookingController::class, 'create'])->name('booking');
+Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+Route::get('/bookings/{booking}/summary', [BookingController::class, 'summary'])
+    ->name('bookings.summary');
 
-Route::get('/booking', function () {
-    return Inertia::render('booking');
-})->name('booking');
-
-Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
-    // Dashboard
+Route::middleware(['auth', 'role:admin'])->group(function (): void {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Customers
-    Route::resource('dashboard/customers', CustomerController::class)->only(['index', 'store', 'update', 'destroy']);
-
-    // Services
-    Route::resource('dashboard/services', ServiceController::class)->only(['index', 'store', 'update', 'destroy']);
-
-    // Transactions
-    Route::resource('dashboard/transactions', TransactionController::class)->only(['index', 'store', 'update', 'destroy']);
+    Route::delete('dashboard/bookings/{booking}', [DashboardController::class, 'destroy'])
+        ->name('dashboard.bookings.destroy');
 });
 
 require __DIR__.'/settings.php';

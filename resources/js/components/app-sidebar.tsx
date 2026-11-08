@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BaggageClaim, LayoutGrid, ScrollText, Users } from 'lucide-react';
+import { CalendarPlus, Hotel, LayoutGrid } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -12,10 +12,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
-import * as guests from '@/routes/customers';
-import * as services from '@/routes/services';
-import * as transactions from '@/routes/transactions';
+import { booking, dashboard, home } from '@/routes';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -25,20 +22,15 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Guests',
-        href: guests.index(),
-        icon: Users,
+        title: 'New booking',
+        href: booking(),
+        icon: CalendarPlus,
     },
     {
-        title: 'Services',
-        href: services.index(),
-        icon: BaggageClaim,
+        title: 'Guest site',
+        href: home(),
+        icon: Hotel,
     },
-    {
-        title: 'Transactions',
-        href: transactions.index(),
-        icon: ScrollText,
-    }
 ];
 
 export function AppSidebar() {

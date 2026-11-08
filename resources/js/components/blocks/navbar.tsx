@@ -1,32 +1,75 @@
-import { Circle, CircleArrowRight } from "lucide-react";
-import { Badge } from "../ui/badge";
-import AppLogo from "../app-logo";
-import { Button } from "../ui/button";
+import { Link, usePage } from '@inertiajs/react';
+import { ArrowRight, LayoutDashboard } from 'lucide-react';
+import AppLogo from '@/components/app-logo';
+import { Button } from '@/components/ui/button';
+import { booking, home, login } from '@/routes';
 
 export default function NavBar() {
+    const { auth } = usePage().props;
+
     return (
         <>
-            {/* spacer */}
             <div className="h-16 w-full" />
 
-            <nav className="fixed top-0 bg-background w-full border-b z-999">
-                <div className="max-w-7xl mx-auto w-full h-16 px-4 flex items-center justify-between">
-                    <div className="flex-1">
+            <nav className="fixed top-0 z-50 w-full border-b bg-background/90 backdrop-blur">
+                <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4">
+                    <Link href={home.url()} className="flex-1">
                         <AppLogo />
+                    </Link>
+
+                    <div className="hidden flex-2 items-center justify-center gap-6 text-sm font-medium md:flex">
+                        <Link
+                            href={home.url()}
+                            className="text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                            Home
+                        </Link>
+                        <a
+                            href="/#rooms"
+                            className="text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                            Rooms
+                        </a>
+                        <a
+                            href="/#services"
+                            className="text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                            Services
+                        </a>
+                        <Link
+                            href={booking.url()}
+                            className="text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                            Booking
+                        </Link>
                     </div>
-                    <div className="relative flex-2 flex items-center justify-center gap-4 text-lg font-medium w-fit">
-                        <a href="/" className="text-muted-foreground hover:text-foreground">Home</a>
-                        <a href="#" className="text-muted-foreground hover:text-foreground">Rooms & Services</a>
-                        <a href="#" className="text-muted-foreground hover:text-foreground">About Us</a>
-                        <a href="#" className="text-muted-foreground hover:text-foreground">Contact</a>
-                    </div>
-                    <div className="flex-1 flex justify-end">
-                        <Button>
-                            <CircleArrowRight /> Book a Room
+
+                    <div className="flex flex-1 items-center justify-end gap-2">
+                        {auth?.user ? (
+                            <Button asChild variant="outline" size="sm">
+                                <Link href="/dashboard">
+                                    <LayoutDashboard />
+                                    Dashboard
+                                </Link>
+                            </Button>
+                        ) : (
+                            <Button asChild variant="ghost" size="sm">
+                                <Link href={login.url()}>Sign in</Link>
+                            </Button>
+                        )}
+                        <Button
+                            asChild
+                            size="sm"
+                            className="hidden sm:inline-flex"
+                        >
+                            <Link href={booking.url()}>
+                                Book a room
+                                <ArrowRight />
+                            </Link>
                         </Button>
                     </div>
                 </div>
             </nav>
         </>
-    )
+    );
 }

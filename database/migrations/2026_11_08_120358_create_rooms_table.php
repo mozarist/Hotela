@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->integer('quantity')->default(1)->after('service_id');
+        Schema::create('rooms', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->unsignedInteger('price');
+            $table->text('description');
+            $table->string('image_path');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->dropColumn('quantity');
-        });
+        Schema::dropIfExists('rooms');
     }
 };

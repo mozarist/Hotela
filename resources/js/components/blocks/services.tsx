@@ -21,7 +21,7 @@ const services = [
 
 export default function OurServices() {
         return (
-            <div className="w-full">
+            <div id="services" className="w-full scroll-mt-24">
                 <div className="flex flex-col gap-6 max-w-7xl mx-auto px-4 w-full">
                     <div className="flex items-center justify-between gap-6 w-full">
                         <div className="border w-full" />
