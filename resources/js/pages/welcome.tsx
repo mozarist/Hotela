@@ -9,7 +9,7 @@ export default function Welcome({ rooms }: { rooms: Room[] }) {
         <>
             <Head title="Find the best stay" />
 
-            <div className="flex w-full flex-col items-center gap-20 overflow-hidden py-12 md:py-16">
+            <div className="flex w-full flex-col items-center gap-20 overflow-hidden">
                 <HeroSection />
                 <FeaturedRooms rooms={rooms} />
                 <OurServices />
