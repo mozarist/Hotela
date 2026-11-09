@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { CalendarPlus, Hotel, LayoutGrid } from 'lucide-react';
+import { BedDouble, CalendarPlus, Hotel, LayoutGrid } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -13,6 +13,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { booking, dashboard, home } from '@/routes';
+import { index as roomsIndex } from '@/routes/dashboard/rooms';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -20,6 +21,11 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+    },
+    {
+        title: 'Rooms',
+        href: roomsIndex(),
+        icon: BedDouble,
     },
     {
         title: 'New booking',

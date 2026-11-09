@@ -6,6 +6,16 @@ export type Room = {
     image_url: string | null;
 };
 
+export type AdminRoom = {
+    id: number;
+    name: string;
+    price: number;
+    description: string;
+    image_url: string | null;
+    bookings_count: number;
+    bookings_revenue: number;
+};
+
 export type BookingInvoice = {
     id: number;
     guest_name: string;

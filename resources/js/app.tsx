@@ -13,7 +13,7 @@ createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     layout: (name) => {
         switch (true) {
-            case name === 'dashboard' || name.startsWith('Admin/'):
+            case name === 'dashboard' || name.startsWith('dashboard/'):
                 return AppLayout;
             case name.startsWith('auth/'):
                 return AuthLayout;
@@ -49,7 +49,13 @@ if (typeof window !== 'undefined') {
         if (target) {
             const tag = target.tagName;
             const isEditable = (target as HTMLElement).isContentEditable;
-            if (isEditable || tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+            if (
+                isEditable ||
+                tag === 'INPUT' ||
+                tag === 'TEXTAREA' ||
+                tag === 'SELECT'
+            )
+                return;
         }
 
         toggleAppearance();
