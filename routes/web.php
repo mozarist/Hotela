@@ -19,19 +19,19 @@ Route::middleware(['auth', 'role:admin'])->group(function (): void {
     Route::delete('dashboard/bookings/{booking}', [DashboardController::class, 'destroy'])
         ->name('dashboard.bookings.destroy');
 
-    Route::get('dashboard/room-types', [AdminRoomTypeController::class, 'index'])
-        ->name('dashboard.room-types.index');
-    Route::post('dashboard/room-types', [AdminRoomTypeController::class, 'store'])
-        ->name('dashboard.room-types.store');
-    Route::put('dashboard/room-types/{roomType}', [AdminRoomTypeController::class, 'update'])
-        ->name('dashboard.room-types.update');
-    Route::delete('dashboard/room-types/{roomType}', [AdminRoomTypeController::class, 'destroy'])
-        ->name('dashboard.room-types.destroy');
+    // Route::get('dashboard/room-types', [AdminRoomTypeController::class, 'index'])
+    //     ->name('dashboard.room-types.index');
+    // Route::post('dashboard/room-types', [AdminRoomTypeController::class, 'store'])
+    //     ->name('dashboard.room-types.store');
+    // Route::put('dashboard/room-types/{roomType}', [AdminRoomTypeController::class, 'update'])
+    //     ->name('dashboard.room-types.update');
+    // Route::delete('dashboard/room-types/{roomType}', [AdminRoomTypeController::class, 'destroy'])
+    //     ->name('dashboard.room-types.destroy');
 
-    Route::get('dashboard/rooms', [RoomAvailabilityController::class, 'index'])
-        ->name('dashboard.rooms.index');
-    Route::patch('dashboard/rooms/{room}/status', [RoomAvailabilityController::class, 'updateStatus'])
-        ->name('dashboard.rooms.status.update');
+    // Route::get('dashboard/rooms', [RoomAvailabilityController::class, 'index'])
+    //     ->name('dashboard.rooms.index');
+    // Route::patch('dashboard/rooms/{room}/status', [RoomAvailabilityController::class, 'updateStatus'])
+    //     ->name('dashboard.rooms.status.update');
 });
 
 require __DIR__.'/settings.php';

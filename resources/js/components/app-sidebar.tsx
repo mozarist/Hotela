@@ -19,8 +19,8 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { booking, dashboard, home } from '@/routes';
-import { index as roomTypesIndex } from '@/routes/dashboard/room-types';
-import { index as roomsIndex } from '@/routes/dashboard/rooms';
+// import { index as roomTypesIndex } from '@/routes/dashboard/room-types';
+// import { index as roomsIndex } from '@/routes/dashboard/rooms';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -29,16 +29,16 @@ const mainNavItems: NavItem[] = [
         href: dashboard(),
         icon: LayoutGrid,
     },
-    {
-        title: 'Room types',
-        href: roomTypesIndex(),
-        icon: BedDouble,
-    },
-    {
-        title: 'Rooms',
-        href: roomsIndex(),
-        icon: DoorOpen,
-    },
+    // {
+    //     title: 'Room types',
+    //     href: roomTypesIndex(),
+    //     icon: BedDouble,
+    // },
+    // {
+    //     title: 'Rooms',
+    //     href: roomsIndex(),
+    //     icon: DoorOpen,
+    // },
     {
         title: 'New booking',
         href: booking(),
