@@ -3,13 +3,13 @@ import type { LucideIcon } from 'lucide-react';
 import {
     BedDouble,
     CalendarCheck,
+    DoorOpen,
     Ellipsis,
     ImagePlus,
     Pencil,
     Plus,
     Search,
     Trash2,
-    Users,
 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
@@ -63,22 +63,23 @@ import { formatCurrency } from '@/lib/format';
 import { dashboard } from '@/routes';
 import {
     destroy,
-    index as roomsIndex,
+    index as roomTypesIndex,
     store,
     update,
-} from '@/routes/dashboard/rooms';
-import type { AdminRoom } from '@/types/hotel';
+} from '@/routes/dashboard/room-types';
+import type { AdminRoomType } from '@/types/hotel';
 
-type RoomsPageProps = {
-    rooms: AdminRoom[];
+type RoomTypesPageProps = {
+    roomTypes: AdminRoomType[];
     summary: {
+        totalRoomTypes: number;
         totalRooms: number;
-        bookedRooms: number;
+        bookedRoomTypes: number;
         totalBookings: number;
     };
 };
 
-type RoomFormData = {
+type RoomTypeFormData = {
     name: string;
     price: number | '';
     description: string;
@@ -116,19 +117,19 @@ function StatCard({
     );
 }
 
-function RoomForm({
-    room,
+function RoomTypeForm({
+    roomType,
     onCancel,
     onSaved,
 }: {
-    room: AdminRoom | null;
+    roomType: AdminRoomType | null;
     onCancel: () => void;
     onSaved: () => void;
 }) {
-    const form = useForm<RoomFormData>({
-        name: room?.name ?? '',
-        price: room?.price ?? '',
-        description: room?.description ?? '',
+    const form = useForm<RoomTypeFormData>({
+        name: roomType?.name ?? '',
+        price: roomType?.price ?? '',
+        description: roomType?.description ?? '',
         image: null,
     });
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -156,9 +157,9 @@ function RoomForm({
             preserveScroll: true,
             onSuccess: () => {
                 toast.success(
-                    room
-                        ? 'Room updated successfully.'
-                        : 'Room added successfully.',
+                    roomType
+                        ? 'Room type updated successfully.'
+                        : 'Room type added successfully.',
                 );
                 onSaved();
             },
@@ -169,9 +170,9 @@ function RoomForm({
             },
         };
 
-        if (room) {
+        if (roomType) {
             form.transform((data) => ({ ...data, _method: 'put' }));
-            form.post(update.url(room.id), options);
+            form.post(update.url(roomType.id), options);
 
             return;
         }
@@ -179,14 +180,15 @@ function RoomForm({
         form.post(store.url(), options);
     }
 
-    const imageSource = previewUrl ?? room?.image_url ?? null;
+    const imageSource = previewUrl ?? roomType?.image_url ?? null;
 
     return (
         <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
             <div className="flex-1 space-y-5 overflow-y-auto px-6 pb-6">
                 <div className="space-y-2">
                     <Label htmlFor="name">
-                        Room name <span className="text-destructive">*</span>
+                        Room type name{' '}
+                        <span className="text-destructive">*</span>
                     </Label>
                     <Input
                         id="name"
@@ -241,7 +243,7 @@ function RoomForm({
                         onChange={(event) =>
                             form.setData('description', event.target.value)
                         }
-                        placeholder="Describe the room, its view, and included amenities."
+                        placeholder="Describe the room type, its view, and included amenities."
                         disabled={form.processing}
                     />
                     <InputError message={form.errors.description} />
@@ -249,8 +251,10 @@ function RoomForm({
 
                 <div className="space-y-2">
                     <Label htmlFor="image">
-                        Room image{' '}
-                        {!room && <span className="text-destructive">*</span>}
+                        Room type image{' '}
+                        {!roomType && (
+                            <span className="text-destructive">*</span>
+                        )}
                     </Label>
 
                     <div className="flex items-center gap-3 rounded-2xl border bg-muted/30 p-3">
@@ -258,7 +262,9 @@ function RoomForm({
                             <img
                                 src={imageSource}
                                 alt={
-                                    room ? `${room.name} room` : 'Room preview'
+                                    roomType
+                                        ? `${roomType.name} room type`
+                                        : 'Room type preview'
                                 }
                                 className="size-16 shrink-0 rounded-xl object-cover"
                             />
@@ -278,7 +284,7 @@ function RoomForm({
                             />
                             <p className="text-xs text-muted-foreground">
                                 JPG, PNG, or WebP up to 2 MB.
-                                {room
+                                {roomType
                                     ? ' Leave empty to keep the current image.'
                                     : ''}
                             </p>
@@ -296,9 +302,9 @@ function RoomForm({
                 >
                     {form.processing
                         ? 'Saving...'
-                        : room
+                        : roomType
                           ? 'Save changes'
-                          : 'Add room'}
+                          : 'Add room type'}
                 </Button>
                 <Button
                     type="button"
@@ -314,30 +320,35 @@ function RoomForm({
     );
 }
 
-export default function Rooms({ rooms, summary }: RoomsPageProps) {
+export default function RoomTypes({ roomTypes, summary }: RoomTypesPageProps) {
     const [search, setSearch] = useState('');
     const [sheetOpen, setSheetOpen] = useState(false);
-    const [editingRoom, setEditingRoom] = useState<AdminRoom | null>(null);
-    const [pendingDelete, setPendingDelete] = useState<AdminRoom | null>(null);
+    const [editingRoomType, setEditingRoomType] =
+        useState<AdminRoomType | null>(null);
+    const [pendingDelete, setPendingDelete] = useState<AdminRoomType | null>(
+        null,
+    );
     const [deleting, setDeleting] = useState(false);
 
-    const filteredRooms = useMemo(() => {
+    const filteredRoomTypes = useMemo(() => {
         const query = search.trim().toLowerCase();
 
         if (query === '') {
-            return rooms;
+            return roomTypes;
         }
 
-        return rooms.filter((room) => room.name.toLowerCase().includes(query));
-    }, [rooms, search]);
+        return roomTypes.filter((roomType) =>
+            roomType.name.toLowerCase().includes(query),
+        );
+    }, [roomTypes, search]);
 
     function openCreateSheet() {
-        setEditingRoom(null);
+        setEditingRoomType(null);
         setSheetOpen(true);
     }
 
-    function openEditSheet(room: AdminRoom) {
-        setEditingRoom(room);
+    function openEditSheet(roomType: AdminRoomType) {
+        setEditingRoomType(roomType);
         setSheetOpen(true);
     }
 
@@ -355,11 +366,11 @@ export default function Rooms({ rooms, summary }: RoomsPageProps) {
         router.delete(destroy.url(pendingDelete.id), {
             preserveScroll: true,
             onSuccess: () => {
-                toast.success(`${pendingDelete.name} room was deleted.`);
+                toast.success(`${pendingDelete.name} room type was deleted.`);
                 setPendingDelete(null);
             },
             onError: () => {
-                toast.error('The room could not be deleted.');
+                toast.error('The room type could not be deleted.');
             },
             onFinish: () => {
                 setDeleting(false);
@@ -367,45 +378,47 @@ export default function Rooms({ rooms, summary }: RoomsPageProps) {
         });
     }
 
-    const blockedByBookings = (pendingDelete?.bookings_count ?? 0) > 0;
+    const blockedByRelations =
+        (pendingDelete?.rooms_count ?? 0) > 0 ||
+        (pendingDelete?.bookings_count ?? 0) > 0;
 
     return (
         <>
-            <Head title="Room management" />
+            <Head title="Room type management" />
 
             <div className="flex h-full flex-1 flex-col gap-5 overflow-x-auto rounded-xl p-4">
                 <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
                     <div>
-                        <h1 className="font-serif text-3xl">Rooms</h1>
+                        <h1 className="font-serif text-3xl">Room types</h1>
                         <p className="mt-1 text-sm text-muted-foreground">
-                            Manage the room catalogue and track how often each
-                            room is booked.
+                            Manage the room type catalogue. Physical room units
+                            are managed on the Rooms page.
                         </p>
                     </div>
 
                     <Button onClick={openCreateSheet}>
                         <Plus />
-                        Add room
+                        Add room type
                     </Button>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-3">
                     <StatCard
-                        label="Total rooms"
-                        value={summary.totalRooms.toLocaleString('id-ID')}
+                        label="Total room types"
+                        value={summary.totalRoomTypes.toLocaleString('id-ID')}
                         description="Room types available in the catalogue."
                         icon={BedDouble}
                     />
                     <StatCard
-                        label="Rooms booked"
-                        value={summary.bookedRooms.toLocaleString('id-ID')}
-                        description="Room types that have at least one booking."
-                        icon={Users}
+                        label="Physical rooms"
+                        value={summary.totalRooms.toLocaleString('id-ID')}
+                        description="Physical units across every room type."
+                        icon={DoorOpen}
                     />
                     <StatCard
                         label="Total bookings"
                         value={summary.totalBookings.toLocaleString('id-ID')}
-                        description="All reservations across every room."
+                        description={`${summary.bookedRoomTypes.toLocaleString('id-ID')} room type${summary.bookedRoomTypes === 1 ? '' : 's'} with bookings.`}
                         icon={CalendarCheck}
                     />
                 </div>
@@ -413,10 +426,10 @@ export default function Rooms({ rooms, summary }: RoomsPageProps) {
                 <Card className="overflow-hidden pb-0">
                     <CardHeader className="gap-4">
                         <div>
-                            <CardTitle>Room catalogue</CardTitle>
+                            <CardTitle>Room type catalogue</CardTitle>
                             <CardDescription>
-                                Each room shows its nightly rate and the number
-                                of reservations it has received.
+                                Each room type shows its nightly rate, physical
+                                unit count, and reservation activity.
                             </CardDescription>
                         </div>
 
@@ -427,19 +440,20 @@ export default function Rooms({ rooms, summary }: RoomsPageProps) {
                                 onChange={(event) =>
                                     setSearch(event.target.value)
                                 }
-                                placeholder="Search rooms..."
+                                placeholder="Search room types..."
                                 className="pl-9"
                             />
                         </div>
                     </CardHeader>
 
                     <CardContent className="p-0">
-                        {filteredRooms.length > 0 ? (
+                        {filteredRoomTypes.length > 0 ? (
                             <Table className="rounded-none border-0">
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead>Room</TableHead>
+                                        <TableHead>Room type</TableHead>
                                         <TableHead>Price / night</TableHead>
+                                        <TableHead>Rooms</TableHead>
                                         <TableHead>Bookings</TableHead>
                                         <TableHead>Revenue</TableHead>
                                         <TableHead>Description</TableHead>
@@ -448,23 +462,23 @@ export default function Rooms({ rooms, summary }: RoomsPageProps) {
                                 </TableHeader>
 
                                 <TableBody>
-                                    {filteredRooms.map((room) => (
-                                        <TableRow key={room.id}>
+                                    {filteredRoomTypes.map((roomType) => (
+                                        <TableRow key={roomType.id}>
                                             <TableCell>
                                                 <div className="flex items-center gap-3">
                                                     <RoomImage
-                                                        src={room.image_url}
-                                                        alt={`${room.name} room`}
+                                                        src={roomType.image_url}
+                                                        alt={`${roomType.name} room type`}
                                                         className="size-11 shrink-0 rounded-xl object-cover"
                                                     />
                                                     <div>
                                                         <div className="font-medium">
-                                                            {room.name}
+                                                            {roomType.name}
                                                         </div>
                                                         <div className="text-xs text-muted-foreground">
-                                                            {room.bookings_count >
+                                                            {roomType.bookings_count >
                                                             0
-                                                                ? `Booked ${room.bookings_count} time${room.bookings_count === 1 ? '' : 's'}`
+                                                                ? `Booked ${roomType.bookings_count} time${roomType.bookings_count === 1 ? '' : 's'}`
                                                                 : 'No bookings yet'}
                                                         </div>
                                                     </div>
@@ -472,18 +486,34 @@ export default function Rooms({ rooms, summary }: RoomsPageProps) {
                                             </TableCell>
 
                                             <TableCell className="font-medium">
-                                                {formatCurrency(room.price)}
+                                                {formatCurrency(roomType.price)}
                                             </TableCell>
 
                                             <TableCell>
                                                 <Badge
                                                     variant={
-                                                        room.bookings_count > 0
+                                                        roomType.rooms_count > 0
                                                             ? 'secondary'
                                                             : 'outline'
                                                     }
                                                 >
-                                                    {room.bookings_count.toLocaleString(
+                                                    <DoorOpen />
+                                                    {roomType.rooms_count.toLocaleString(
+                                                        'id-ID',
+                                                    )}
+                                                </Badge>
+                                            </TableCell>
+
+                                            <TableCell>
+                                                <Badge
+                                                    variant={
+                                                        roomType.bookings_count >
+                                                        0
+                                                            ? 'secondary'
+                                                            : 'outline'
+                                                    }
+                                                >
+                                                    {roomType.bookings_count.toLocaleString(
                                                         'id-ID',
                                                     )}
                                                 </Badge>
@@ -491,13 +521,13 @@ export default function Rooms({ rooms, summary }: RoomsPageProps) {
 
                                             <TableCell>
                                                 {formatCurrency(
-                                                    room.bookings_revenue,
+                                                    roomType.bookings_revenue,
                                                 )}
                                             </TableCell>
 
                                             <TableCell className="max-w-xs">
                                                 <p className="line-clamp-2 text-sm text-muted-foreground">
-                                                    {room.description}
+                                                    {roomType.description}
                                                 </p>
                                             </TableCell>
 
@@ -517,23 +547,23 @@ export default function Rooms({ rooms, summary }: RoomsPageProps) {
                                                         <DropdownMenuItem
                                                             onClick={() =>
                                                                 openEditSheet(
-                                                                    room,
+                                                                    roomType,
                                                                 )
                                                             }
                                                         >
                                                             <Pencil />
-                                                            Edit room
+                                                            Edit room type
                                                         </DropdownMenuItem>
                                                         <DropdownMenuItem
                                                             variant="destructive"
                                                             onClick={() =>
                                                                 setPendingDelete(
-                                                                    room,
+                                                                    roomType,
                                                                 )
                                                             }
                                                         >
                                                             <Trash2 />
-                                                            Delete room
+                                                            Delete room type
                                                         </DropdownMenuItem>
                                                     </DropdownMenuContent>
                                                 </DropdownMenu>
@@ -545,11 +575,13 @@ export default function Rooms({ rooms, summary }: RoomsPageProps) {
                         ) : (
                             <div className="flex flex-col items-center justify-center gap-2 px-6 py-16 text-center">
                                 <BedDouble className="size-10 text-muted-foreground/60" />
-                                <p className="font-medium">No rooms found.</p>
+                                <p className="font-medium">
+                                    No room types found.
+                                </p>
                                 <p className="max-w-sm text-sm text-muted-foreground">
                                     {search !== ''
                                         ? 'Try a different search term.'
-                                        : 'Add the first room to start accepting bookings.'}
+                                        : 'Add the first room type to start accepting bookings.'}
                                 </p>
                                 {search === '' && (
                                     <Button
@@ -558,7 +590,7 @@ export default function Rooms({ rooms, summary }: RoomsPageProps) {
                                         className="mt-2"
                                     >
                                         <Plus />
-                                        Add room
+                                        Add room type
                                     </Button>
                                 )}
                             </div>
@@ -574,18 +606,20 @@ export default function Rooms({ rooms, summary }: RoomsPageProps) {
                 >
                     <SheetHeader>
                         <SheetTitle>
-                            {editingRoom ? 'Edit room' : 'Add a room'}
+                            {editingRoomType
+                                ? 'Edit room type'
+                                : 'Add a room type'}
                         </SheetTitle>
                         <SheetDescription>
-                            {editingRoom
-                                ? 'Update the room details below. Changes are visible to guests immediately.'
-                                : 'Fill in the room details to add it to the catalogue.'}
+                            {editingRoomType
+                                ? 'Update the room type details below. Changes are visible to guests immediately.'
+                                : 'Fill in the room type details to add it to the catalogue.'}
                         </SheetDescription>
                     </SheetHeader>
 
-                    <RoomForm
-                        key={`${sheetOpen ? 'open' : 'closed'}-${editingRoom?.id ?? 'new'}`}
-                        room={editingRoom}
+                    <RoomTypeForm
+                        key={`${sheetOpen ? 'open' : 'closed'}-${editingRoomType?.id ?? 'new'}`}
+                        roomType={editingRoomType}
                         onCancel={closeSheet}
                         onSaved={closeSheet}
                     />
@@ -602,17 +636,24 @@ export default function Rooms({ rooms, summary }: RoomsPageProps) {
             >
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Delete this room?</AlertDialogTitle>
+                        <AlertDialogTitle>
+                            Delete this room type?
+                        </AlertDialogTitle>
                         <AlertDialogDescription>
-                            {blockedByBookings ? (
+                            {blockedByRelations ? (
                                 <>
                                     <strong>{pendingDelete?.name}</strong> still
-                                    has {pendingDelete?.bookings_count} booking
+                                    has {pendingDelete?.rooms_count} physical
+                                    room
+                                    {pendingDelete?.rooms_count === 1
+                                        ? ''
+                                        : 's'}{' '}
+                                    and {pendingDelete?.bookings_count} booking
                                     {pendingDelete?.bookings_count === 1
                                         ? ''
                                         : 's'}
-                                    . Remove those bookings before deleting this
-                                    room.
+                                    . Remove those before deleting this room
+                                    type.
                                 </>
                             ) : (
                                 <>
@@ -630,9 +671,9 @@ export default function Rooms({ rooms, summary }: RoomsPageProps) {
                         <AlertDialogAction
                             variant="destructive"
                             onClick={confirmDelete}
-                            disabled={deleting || blockedByBookings}
+                            disabled={deleting || blockedByRelations}
                         >
-                            {deleting ? 'Deleting...' : 'Delete room'}
+                            {deleting ? 'Deleting...' : 'Delete room type'}
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
@@ -641,15 +682,15 @@ export default function Rooms({ rooms, summary }: RoomsPageProps) {
     );
 }
 
-Rooms.layout = {
+RoomTypes.layout = {
     breadcrumbs: [
         {
             title: 'Dashboard',
             href: dashboard(),
         },
         {
-            title: 'Rooms',
-            href: roomsIndex(),
+            title: 'Room types',
+            href: roomTypesIndex(),
         },
     ],
 };

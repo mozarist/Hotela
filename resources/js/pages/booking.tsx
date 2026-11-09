@@ -33,10 +33,10 @@ import {
 } from '@/components/ui/select';
 import { formatCurrency } from '@/lib/format';
 import { store } from '@/routes/bookings';
-import type { Room } from '@/types/hotel';
+import type { RoomType } from '@/types/hotel';
 
 type BookingFormData = {
-    room_id: number | '';
+    room_type_id: number | '';
     guest_name: string;
     gender: 'Laki-laki' | 'Perempuan';
     identity_number: string;
@@ -46,8 +46,8 @@ type BookingFormData = {
 };
 
 type BookingPageProps = {
-    rooms: Room[];
-    selectedRoomId: number | null;
+    roomTypes: RoomType[];
+    selectedRoomTypeId: number | null;
     breakfastFee: number;
     discountRate: number;
     minDiscountDuration: number;
@@ -63,17 +63,19 @@ function todayIso(): string {
 }
 
 export default function Booking({
-    rooms,
-    selectedRoomId,
+    roomTypes,
+    selectedRoomTypeId,
     breakfastFee,
     discountRate,
     minDiscountDuration,
 }: BookingPageProps) {
-    const initialRoom =
-        rooms.find((room) => room.id === selectedRoomId) ?? rooms[0] ?? null;
+    const initialRoomType =
+        roomTypes.find((roomType) => roomType.id === selectedRoomTypeId) ??
+        roomTypes[0] ??
+        null;
 
     const form = useForm<BookingFormData>({
-        room_id: initialRoom?.id ?? '',
+        room_type_id: initialRoomType?.id ?? '',
         guest_name: '',
         gender: 'Laki-laki',
         identity_number: '',
@@ -82,10 +84,14 @@ export default function Booking({
         includes_breakfast: false,
     });
 
-    const selectedRoom =
-        rooms.find((room) => room.id === Number(form.data.room_id)) ?? null;
+    const selectedRoomType =
+        roomTypes.find(
+            (roomType) => roomType.id === Number(form.data.room_type_id),
+        ) ?? null;
     const durationDays = Number(form.data.duration_days) || 0;
-    const subtotal = selectedRoom ? selectedRoom.price * durationDays : 0;
+    const subtotal = selectedRoomType
+        ? selectedRoomType.price * durationDays
+        : 0;
     const includesDiscount = durationDays > minDiscountDuration;
     const discountAmount = includesDiscount
         ? Math.round(subtotal * discountRate)
@@ -153,7 +159,7 @@ export default function Booking({
 
                             <CardContent className="space-y-5">
                                 <div className="space-y-2">
-                                    <Label htmlFor="room_id">
+                                    <Label htmlFor="room_type_id">
                                         Room type{' '}
                                         <span className="text-destructive">
                                             *
@@ -161,51 +167,55 @@ export default function Booking({
                                     </Label>
                                     <Select
                                         value={
-                                            form.data.room_id
-                                                ? String(form.data.room_id)
+                                            form.data.room_type_id
+                                                ? String(form.data.room_type_id)
                                                 : ''
                                         }
                                         onValueChange={(value) =>
                                             form.setData(
-                                                'room_id',
+                                                'room_type_id',
                                                 Number(value),
                                             )
                                         }
                                         disabled={form.processing}
                                     >
                                         <SelectTrigger
-                                            id="room_id"
+                                            id="room_type_id"
                                             className="w-full"
                                         >
-                                            <SelectValue placeholder="Select a room" />
+                                            <SelectValue placeholder="Select a room type" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {rooms.map((room) => (
+                                            {roomTypes.map((roomType) => (
                                                 <SelectItem
-                                                    key={room.id}
-                                                    value={String(room.id)}
+                                                    key={roomType.id}
+                                                    value={String(roomType.id)}
                                                 >
-                                                    {room.name} ·{' '}
-                                                    {formatCurrency(room.price)}{' '}
+                                                    {roomType.name} ·{' '}
+                                                    {formatCurrency(
+                                                        roomType.price,
+                                                    )}{' '}
                                                     / night
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    <InputError message={form.errors.room_id} />
+                                    <InputError
+                                        message={form.errors.room_type_id}
+                                    />
                                 </div>
 
-                                {selectedRoom && (
+                                {selectedRoomType && (
                                     <div className="flex gap-4 rounded-2xl border bg-muted/30 p-3">
                                         <RoomImage
-                                            src={selectedRoom.image_url}
-                                            alt={`${selectedRoom.name} room`}
+                                            src={selectedRoomType.image_url}
+                                            alt={`${selectedRoomType.name} room`}
                                             className="h-24 w-28 shrink-0 rounded-xl object-cover"
                                         />
                                         <div className="flex min-w-0 flex-col justify-center">
                                             <div className="flex items-center gap-2">
                                                 <h3 className="truncate font-medium">
-                                                    {selectedRoom.name} Room
+                                                    {selectedRoomType.name} Room
                                                 </h3>
                                                 <Badge variant="secondary">
                                                     <Sparkles />
@@ -213,7 +223,7 @@ export default function Booking({
                                                 </Badge>
                                             </div>
                                             <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                                                {selectedRoom.description}
+                                                {selectedRoomType.description}
                                             </p>
                                         </div>
                                     </div>
@@ -459,7 +469,8 @@ export default function Booking({
                                 <p className="mt-1 text-xs text-muted-foreground">
                                     {durationDays} night
                                     {durationDays === 1 ? '' : 's'} ·{' '}
-                                    {selectedRoom?.name ?? 'No room selected'}
+                                    {selectedRoomType?.name ??
+                                        'No room selected'}
                                 </p>
                             </div>
 
@@ -469,8 +480,8 @@ export default function Booking({
                                         Room rate
                                     </span>
                                     <span>
-                                        {selectedRoom
-                                            ? `${formatCurrency(selectedRoom.price)} × ${durationDays}`
+                                        {selectedRoomType
+                                            ? `${formatCurrency(selectedRoomType.price)} × ${durationDays}`
                                             : '-'}
                                     </span>
                                 </div>
@@ -536,7 +547,7 @@ export default function Booking({
                                 type="submit"
                                 className="w-full"
                                 size="lg"
-                                disabled={form.processing || !selectedRoom}
+                                disabled={form.processing || !selectedRoomType}
                             >
                                 {form.processing
                                     ? 'Creating booking...'

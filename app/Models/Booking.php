@@ -16,7 +16,7 @@ class Booking extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'room_id',
+        'room_type_id',
         'guest_name',
         'gender',
         'identity_number',
@@ -28,13 +28,13 @@ class Booking extends Model
     ];
 
     /**
-     * Get the room reserved by this booking.
+     * Get the room type reserved by this booking.
      *
-     * @return BelongsTo<Room, $this>
+     * @return BelongsTo<RoomType, $this>
      */
-    public function room(): BelongsTo
+    public function roomType(): BelongsTo
     {
-        return $this->belongsTo(Room::class);
+        return $this->belongsTo(RoomType::class);
     }
 
     /**

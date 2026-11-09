@@ -1,12 +1,13 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\RoomController as AdminRoomController;
+use App\Http\Controllers\Admin\RoomAvailabilityController;
+use App\Http\Controllers\Admin\RoomTypeController as AdminRoomTypeController;
 use App\Http\Controllers\BookingController;
-use App\Http\Controllers\RoomController;
+use App\Http\Controllers\RoomTypeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [RoomController::class, 'index'])->name('home');
+Route::get('/', [RoomTypeController::class, 'index'])->name('home');
 
 Route::get('/booking', [BookingController::class, 'create'])->name('booking');
 Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
@@ -18,14 +19,19 @@ Route::middleware(['auth', 'role:admin'])->group(function (): void {
     Route::delete('dashboard/bookings/{booking}', [DashboardController::class, 'destroy'])
         ->name('dashboard.bookings.destroy');
 
-    Route::get('dashboard/rooms', [AdminRoomController::class, 'index'])
+    Route::get('dashboard/room-types', [AdminRoomTypeController::class, 'index'])
+        ->name('dashboard.room-types.index');
+    Route::post('dashboard/room-types', [AdminRoomTypeController::class, 'store'])
+        ->name('dashboard.room-types.store');
+    Route::put('dashboard/room-types/{roomType}', [AdminRoomTypeController::class, 'update'])
+        ->name('dashboard.room-types.update');
+    Route::delete('dashboard/room-types/{roomType}', [AdminRoomTypeController::class, 'destroy'])
+        ->name('dashboard.room-types.destroy');
+
+    Route::get('dashboard/rooms', [RoomAvailabilityController::class, 'index'])
         ->name('dashboard.rooms.index');
-    Route::post('dashboard/rooms', [AdminRoomController::class, 'store'])
-        ->name('dashboard.rooms.store');
-    Route::put('dashboard/rooms/{room}', [AdminRoomController::class, 'update'])
-        ->name('dashboard.rooms.update');
-    Route::delete('dashboard/rooms/{room}', [AdminRoomController::class, 'destroy'])
-        ->name('dashboard.rooms.destroy');
+    Route::patch('dashboard/rooms/{room}/status', [RoomAvailabilityController::class, 'updateStatus'])
+        ->name('dashboard.rooms.status.update');
 });
 
 require __DIR__.'/settings.php';

@@ -73,10 +73,10 @@ type DashboardProps = {
         to: number | null;
         links: PaginationLink[];
     };
-    rooms: Array<{ id: number; name: string; price: number }>;
+    roomTypes: Array<{ id: number; name: string; price: number }>;
     filters: {
         search: string;
-        room_id: number | null;
+        room_type_id: number | null;
     };
     summary: {
         totalBookings: number;
@@ -120,13 +120,13 @@ function StatCard({
 
 export default function Dashboard({
     bookings,
-    rooms,
+    roomTypes,
     filters,
     summary,
 }: DashboardProps) {
     const [search, setSearch] = useState(filters.search);
-    const [roomId, setRoomId] = useState(
-        filters.room_id ? String(filters.room_id) : 'all',
+    const [roomTypeId, setRoomTypeId] = useState(
+        filters.room_type_id ? String(filters.room_type_id) : 'all',
     );
     const [pendingDelete, setPendingDelete] = useState<DashboardBooking | null>(
         null,
@@ -146,7 +146,7 @@ export default function Dashboard({
             dashboard.url(),
             {
                 search: search.trim() || undefined,
-                room_id: roomId === 'all' ? undefined : roomId,
+                room_type_id: roomTypeId === 'all' ? undefined : roomTypeId,
             },
             navigationOptions,
         );
@@ -154,7 +154,7 @@ export default function Dashboard({
 
     function resetFilters() {
         setSearch('');
-        setRoomId('all');
+        setRoomTypeId('all');
         router.get(dashboard.url(), {}, navigationOptions);
     }
 
@@ -260,20 +260,23 @@ export default function Dashboard({
                                 />
                             </div>
 
-                            <Select value={roomId} onValueChange={setRoomId}>
+                            <Select
+                                value={roomTypeId}
+                                onValueChange={setRoomTypeId}
+                            >
                                 <SelectTrigger className="w-full md:w-48">
-                                    <SelectValue placeholder="All rooms" />
+                                    <SelectValue placeholder="All room types" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="all">
-                                        All rooms
+                                        All room types
                                     </SelectItem>
-                                    {rooms.map((room) => (
+                                    {roomTypes.map((roomType) => (
                                         <SelectItem
-                                            key={room.id}
-                                            value={String(room.id)}
+                                            key={roomType.id}
+                                            value={String(roomType.id)}
                                         >
-                                            {room.name}
+                                            {roomType.name}
                                         </SelectItem>
                                     ))}
                                 </SelectContent>
@@ -330,11 +333,15 @@ export default function Dashboard({
 
                                                 <TableCell>
                                                     <Badge variant="secondary">
-                                                        {bookingItem.room.name}
+                                                        {
+                                                            bookingItem
+                                                                .room_type.name
+                                                        }
                                                     </Badge>
                                                     <div className="mt-1 text-xs text-muted-foreground">
                                                         {formatCurrency(
-                                                            bookingItem.room
+                                                            bookingItem
+                                                                .room_type
                                                                 .price,
                                                         )}{' '}
                                                         / night

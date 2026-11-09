@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\RoomStatus;
 use App\Models\Room;
+use App\Models\RoomType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,20 +19,10 @@ class RoomFactory extends Factory
      */
     public function definition(): array
     {
-        $name = fake()->unique()->randomElement([
-            'Standar',
-            'Deluxe',
-            'Family',
-            'Executive',
-            'Twin',
-            'Suite',
-        ]);
-
         return [
-            'name' => $name,
-            'price' => fake()->randomElement([450000, 750000, 1200000]),
-            'description' => fake()->sentence(16),
-            'image_path' => 'rooms/'.strtolower($name).'.jpg',
+            'room_type_id' => RoomType::factory(),
+            'room_number' => fake()->unique()->numerify('###'),
+            'status' => fake()->randomElement(RoomStatus::cases()),
         ];
     }
 }

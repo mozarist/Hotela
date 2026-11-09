@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
+use App\Enums\RoomStatus;
 use Database\Factories\RoomFactory;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Room extends Model
 {
@@ -18,41 +17,19 @@ class Room extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'price',
-        'description',
-        'image_path',
+        'room_type_id',
+        'room_number',
+        'status',
     ];
 
     /**
-     * @var list<string>
-     */
-    protected $appends = [
-        'image_url',
-    ];
-
-    /**
-     * Get every booking made for this room.
+     * Get the room type that this physical room belongs to.
      *
-     * @return HasMany<Booking, $this>
+     * @return BelongsTo<RoomType, $this>
      */
-    public function bookings(): HasMany
+    public function roomType(): BelongsTo
     {
-        return $this->hasMany(Booking::class);
-    }
-
-    /**
-     * Resolve the public object storage URL for the room image.
-     *
-     * @return Attribute<string|null, never>
-     */
-    protected function imageUrl(): Attribute
-    {
-        return Attribute::get(
-            fn (): ?string => $this->image_path === null
-                ? null
-                : Storage::disk('s3')->url($this->image_path),
-        );
+        return $this->belongsTo(RoomType::class);
     }
 
     /**
@@ -61,7 +38,7 @@ class Room extends Model
     protected function casts(): array
     {
         return [
-            'price' => 'integer',
+            'status' => RoomStatus::class,
         ];
     }
 }

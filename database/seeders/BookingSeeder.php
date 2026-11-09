@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Booking;
-use App\Models\Room;
+use App\Models\RoomType;
 use App\Services\BookingCalculatorService;
 use Illuminate\Database\Seeder;
 
@@ -26,10 +26,10 @@ class BookingSeeder extends Seeder
         ];
 
         foreach ($guests as $guest) {
-            $room = Room::query()->where('name', $guest['room'])->firstOrFail();
+            $roomType = RoomType::query()->where('name', $guest['room'])->firstOrFail();
 
             $calculation = $calculator->calculate(
-                room: $room,
+                roomType: $roomType,
                 durationDays: $guest['days'],
                 includesBreakfast: $guest['breakfast'],
             );
@@ -40,7 +40,7 @@ class BookingSeeder extends Seeder
                     'booking_date' => now()->addDays($guest['days_ahead'])->toDateString(),
                 ],
                 [
-                    'room_id' => $room->id,
+                    'room_type_id' => $roomType->id,
                     'guest_name' => $guest['name'],
                     'gender' => $guest['gender'],
                     'duration_days' => $guest['days'],

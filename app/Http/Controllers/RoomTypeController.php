@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Room;
+use App\Models\RoomType;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class RoomController extends Controller
+class RoomTypeController extends Controller
 {
     /**
      * Display the landing page with all available room types.
@@ -15,12 +15,12 @@ class RoomController extends Controller
      */
     public function index(): Response
     {
-        $rooms = Room::query()
+        $roomTypes = RoomType::query()
             ->orderBy('price')
             ->get(['id', 'name', 'price', 'description', 'image_path']);
 
         return Inertia::render('welcome', [
-            'rooms' => $rooms,
+            'roomTypes' => $roomTypes,
         ]);
     }
 }

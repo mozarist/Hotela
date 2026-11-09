@@ -1,17 +1,17 @@
 <?php
 
-use App\Models\Room;
+use App\Models\RoomType;
 use App\Services\BookingCalculatorService;
 
-function roomWithPrice(int $price): Room
+function roomTypeWithPrice(int $price): RoomType
 {
-    return new Room(['price' => $price]);
+    return new RoomType(['price' => $price]);
 }
 
 test('it calculates a booking without a discount or breakfast', function () {
     $calculator = new BookingCalculatorService;
 
-    $result = $calculator->calculate(roomWithPrice(450000), 2, false);
+    $result = $calculator->calculate(roomTypeWithPrice(450000), 2, false);
 
     expect($result)->toMatchArray([
         'price_per_night' => 450000,
@@ -26,7 +26,7 @@ test('it calculates a booking without a discount or breakfast', function () {
 test('it does not apply the discount for a three night stay', function () {
     $calculator = new BookingCalculatorService;
 
-    $result = $calculator->calculate(roomWithPrice(500000), 3, false);
+    $result = $calculator->calculate(roomTypeWithPrice(500000), 3, false);
 
     expect($result['discount_amount'])->toBe(0)
         ->and($result['total_payment'])->toBe(1500000)
@@ -36,7 +36,7 @@ test('it does not apply the discount for a three night stay', function () {
 test('it applies a ten percent discount for stays longer than three nights', function () {
     $calculator = new BookingCalculatorService;
 
-    $result = $calculator->calculate(roomWithPrice(500000), 4, false);
+    $result = $calculator->calculate(roomTypeWithPrice(500000), 4, false);
 
     expect($result['subtotal'])->toBe(2000000)
         ->and($result['discount_amount'])->toBe(200000)
@@ -47,7 +47,7 @@ test('it applies a ten percent discount for stays longer than three nights', fun
 test('it adds the flat breakfast fee after the discount is applied', function () {
     $calculator = new BookingCalculatorService;
 
-    $result = $calculator->calculate(roomWithPrice(500000), 4, true);
+    $result = $calculator->calculate(roomTypeWithPrice(500000), 4, true);
 
     expect($result['discount_amount'])->toBe(200000)
         ->and($result['breakfast_fee'])->toBe(80000)
@@ -57,5 +57,5 @@ test('it adds the flat breakfast fee after the discount is applied', function ()
 test('it rejects a duration below one night', function () {
     $calculator = new BookingCalculatorService;
 
-    $calculator->calculate(roomWithPrice(500000), 0, false);
+    $calculator->calculate(roomTypeWithPrice(500000), 0, false);
 })->throws(InvalidArgumentException::class);

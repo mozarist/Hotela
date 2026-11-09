@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Booking;
-use App\Models\Room;
+use App\Models\RoomType;
 use App\Models\User;
 use Database\Seeders\RoleSeeder;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -27,10 +27,10 @@ test('admins can see booking history and summary metrics', function () {
     $admin = User::factory()->create();
     $admin->assignRole('admin');
 
-    $room = Room::factory()->create(['name' => 'Family', 'price' => 1200000]);
+    $roomType = RoomType::factory()->create(['name' => 'Family', 'price' => 1200000]);
 
     Booking::factory()->count(2)->create([
-        'room_id' => $room->id,
+        'room_type_id' => $roomType->id,
         'duration_days' => 4,
         'discount_amount' => 480000,
         'total_payment' => 4800000,
@@ -49,8 +49,8 @@ test('admins can see booking history and summary metrics', function () {
             ->where('summary.breakfastBookings', 2)
             ->where('summary.totalNights', 8)
             ->has('bookings.data', 2)
-            ->has('rooms', 1)
-            ->where('bookings.data.0.room.name', 'Family')
+            ->has('roomTypes', 1)
+            ->where('bookings.data.0.room_type.name', 'Family')
         );
 });
 

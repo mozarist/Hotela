@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBookingRequest;
 use App\Models\Booking;
-use App\Models\Room;
+use App\Models\RoomType;
 use App\Services\BookingCalculatorService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,21 +15,21 @@ use Throwable;
 class BookingController extends Controller
 {
     /**
-     * Display the smart booking form with available rooms.
+     * Display the smart booking form with available room types.
      *
      * @author Hotela Engineering Team
      */
     public function create(Request $request): Response
     {
-        $rooms = Room::query()
+        $roomTypes = RoomType::query()
             ->orderBy('price')
             ->get(['id', 'name', 'price', 'description', 'image_path']);
 
-        $selectedRoomId = $request->integer('room');
+        $selectedRoomTypeId = $request->integer('room_type');
 
         return Inertia::render('booking', [
-            'rooms' => $rooms,
-            'selectedRoomId' => $selectedRoomId > 0 ? $selectedRoomId : null,
+            'roomTypes' => $roomTypes,
+            'selectedRoomTypeId' => $selectedRoomTypeId > 0 ? $selectedRoomTypeId : null,
             'breakfastFee' => BookingCalculatorService::BREAKFAST_FEE,
             'discountRate' => BookingCalculatorService::LONG_STAY_DISCOUNT_RATE,
             'minDiscountDuration' => BookingCalculatorService::MIN_DISCOUNT_DURATION,
@@ -47,16 +47,16 @@ class BookingController extends Controller
     ): RedirectResponse {
         try {
             $validated = $request->validated();
-            $room = Room::query()->findOrFail($validated['room_id']);
+            $roomType = RoomType::query()->findOrFail($validated['room_type_id']);
 
             $calculation = $calculator->calculate(
-                room: $room,
+                roomType: $roomType,
                 durationDays: (int) $validated['duration_days'],
                 includesBreakfast: $request->boolean('includes_breakfast'),
             );
 
             $booking = Booking::query()->create([
-                'room_id' => $room->id,
+                'room_type_id' => $roomType->id,
                 'guest_name' => $validated['guest_name'],
                 'gender' => $validated['gender'],
                 'identity_number' => $validated['identity_number'],
@@ -92,10 +92,10 @@ class BookingController extends Controller
      */
     public function summary(Booking $booking, BookingCalculatorService $calculator): Response
     {
-        $booking->loadMissing('room');
+        $booking->loadMissing('roomType');
 
         $calculation = $calculator->calculate(
-            room: $booking->room,
+            roomType: $booking->roomType,
             durationDays: $booking->duration_days,
             includesBreakfast: $booking->includes_breakfast,
         );
@@ -112,12 +112,12 @@ class BookingController extends Controller
                 'discount_amount' => $booking->discount_amount,
                 'total_payment' => $booking->total_payment,
                 'created_at' => $booking->created_at?->toIso8601String(),
-                'room' => [
-                    'id' => $booking->room->id,
-                    'name' => $booking->room->name,
-                    'price' => $booking->room->price,
-                    'description' => $booking->room->description,
-                    'image_url' => $booking->room->image_url,
+                'room_type' => [
+                    'id' => $booking->roomType->id,
+                    'name' => $booking->roomType->name,
+                    'price' => $booking->roomType->price,
+                    'description' => $booking->roomType->description,
+                    'image_url' => $booking->roomType->image_url,
                 ],
                 'subtotal' => $calculation['subtotal'],
                 'breakfast_fee' => $calculation['breakfast_fee'],

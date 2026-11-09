@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Booking;
-use App\Models\Room;
+use App\Models\RoomType;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -9,8 +9,8 @@ beforeEach(function () {
     Storage::fake('s3');
 });
 
-test('the landing page lists rooms fetched from the database with S3 URLs', function () {
-    Room::factory()->create([
+test('the landing page lists room types fetched from the database with S3 URLs', function () {
+    RoomType::factory()->create([
         'name' => 'Standar',
         'price' => 450000,
         'description' => 'A calm room.',
@@ -23,33 +23,33 @@ test('the landing page lists rooms fetched from the database with S3 URLs', func
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('welcome')
-            ->has('rooms', 1)
-            ->where('rooms.0.name', 'Standar')
-            ->where('rooms.0.price', 450000)
-            ->where('rooms.0.image_url', fn ($url) => str_contains($url, 'rooms/standar.jpg'))
+            ->has('roomTypes', 1)
+            ->where('roomTypes.0.name', 'Standar')
+            ->where('roomTypes.0.price', 450000)
+            ->where('roomTypes.0.image_url', fn ($url) => str_contains($url, 'rooms/standar.jpg'))
         );
 });
 
-test('the booking page exposes rooms and calculator constants', function () {
-    Room::factory()->count(3)->create();
+test('the booking page exposes room types and calculator constants', function () {
+    RoomType::factory()->count(3)->create();
 
-    $response = $this->get(route('booking', ['room' => 2]));
+    $response = $this->get(route('booking', ['room_type' => 2]));
 
     $response
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('booking')
-            ->has('rooms', 3)
-            ->where('selectedRoomId', 2)
+            ->has('roomTypes', 3)
+            ->where('selectedRoomTypeId', 2)
             ->where('breakfastFee', 80000)
         );
 });
 
 test('a guest can create a booking and the server calculates the invoice', function () {
-    $room = Room::factory()->create(['price' => 500000]);
+    $roomType = RoomType::factory()->create(['price' => 500000]);
 
     $response = $this->post(route('bookings.store'), [
-        'room_id' => $room->id,
+        'room_type_id' => $roomType->id,
         'guest_name' => 'Alya Putri',
         'gender' => 'Perempuan',
         'identity_number' => '3171012304950001',
@@ -70,10 +70,10 @@ test('a guest can create a booking and the server calculates the invoice', funct
 });
 
 test('the identity number must contain exactly sixteen digits', function () {
-    $room = Room::factory()->create();
+    $roomType = RoomType::factory()->create();
 
     $response = $this->post(route('bookings.store'), [
-        'room_id' => $room->id,
+        'room_type_id' => $roomType->id,
         'guest_name' => 'Alya Putri',
         'gender' => 'Perempuan',
         'identity_number' => '12345',
@@ -88,10 +88,10 @@ test('the identity number must contain exactly sixteen digits', function () {
 });
 
 test('the duration must be numeric', function () {
-    $room = Room::factory()->create();
+    $roomType = RoomType::factory()->create();
 
     $response = $this->post(route('bookings.store'), [
-        'room_id' => $room->id,
+        'room_type_id' => $roomType->id,
         'guest_name' => 'Alya Putri',
         'gender' => 'Perempuan',
         'identity_number' => '3171012304950001',
@@ -106,7 +106,7 @@ test('the duration must be numeric', function () {
 });
 
 test('the summary page displays a confirmed booking invoice', function () {
-    $room = Room::factory()->create([
+    $roomType = RoomType::factory()->create([
         'name' => 'Deluxe',
         'price' => 750000,
         'description' => 'A spacious room.',
@@ -114,7 +114,7 @@ test('the summary page displays a confirmed booking invoice', function () {
     ]);
 
     $booking = Booking::factory()->create([
-        'room_id' => $room->id,
+        'room_type_id' => $roomType->id,
         'guest_name' => 'Bima Pratama',
         'gender' => 'Laki-laki',
         'identity_number' => '3171011203920002',
@@ -132,7 +132,7 @@ test('the summary page displays a confirmed booking invoice', function () {
         ->assertInertia(fn (Assert $page) => $page
             ->component('bookings/summary')
             ->where('booking.guest_name', 'Bima Pratama')
-            ->where('booking.room.name', 'Deluxe')
+            ->where('booking.room_type.name', 'Deluxe')
             ->where('booking.subtotal', 3000000)
             ->where('booking.discount_amount', 300000)
             ->where('booking.breakfast_fee', 80000)

@@ -3,9 +3,13 @@ import { ArrowRight, Hotel } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import RoomCard from '@/components/ui/cards/room-card';
 import { booking } from '@/routes';
-import type { Room } from '@/types/hotel';
+import type { RoomType } from '@/types/hotel';
 
-export default function FeaturedRooms({ rooms }: { rooms: Room[] }) {
+export default function FeaturedRooms({
+    roomTypes,
+}: {
+    roomTypes: RoomType[];
+}) {
     return (
         <section id="rooms" className="w-full scroll-mt-24">
             <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4">
@@ -28,10 +32,10 @@ export default function FeaturedRooms({ rooms }: { rooms: Room[] }) {
                     </Button>
                 </div>
 
-                {rooms.length > 0 ? (
+                {roomTypes.length > 0 ? (
                     <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-                        {rooms.map((room) => (
-                            <RoomCard key={room.id} room={room} />
+                        {roomTypes.map((roomType) => (
+                            <RoomCard key={roomType.id} roomType={roomType} />
                         ))}
                     </div>
                 ) : (

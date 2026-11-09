@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Booking;
-use App\Models\Room;
+use App\Models\RoomType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -26,7 +26,7 @@ class BookingFactory extends Factory
         $breakfastFee = $includesBreakfast ? 80000 : 0;
 
         return [
-            'room_id' => Room::factory(),
+            'room_type_id' => RoomType::factory(),
             'guest_name' => fake()->name(),
             'gender' => fake()->randomElement(['Laki-laki', 'Perempuan']),
             'identity_number' => fake()->numerify('################'),

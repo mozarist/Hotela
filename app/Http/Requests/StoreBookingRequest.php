@@ -22,7 +22,7 @@ class StoreBookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'room_id' => ['required', 'integer', 'exists:rooms,id'],
+            'room_type_id' => ['required', 'integer', 'exists:room_types,id'],
             'guest_name' => ['required', 'string', 'max:255'],
             'gender' => ['required', 'string', 'in:Laki-laki,Perempuan'],
             'identity_number' => ['required', 'digits:16'],
@@ -56,7 +56,7 @@ class StoreBookingRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'room_id' => 'tipe kamar',
+            'room_type_id' => 'tipe kamar',
             'guest_name' => 'nama tamu',
             'gender' => 'jenis kelamin',
             'identity_number' => 'nomor identitas',

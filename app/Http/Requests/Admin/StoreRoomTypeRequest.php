@@ -5,10 +5,10 @@ namespace App\Http\Requests\Admin;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreRoomRequest extends FormRequest
+class StoreRoomTypeRequest extends FormRequest
 {
     /**
-     * Determine if the admin is allowed to create a room.
+     * Determine if the admin is allowed to create a room type.
      */
     public function authorize(): bool
     {
@@ -16,7 +16,7 @@ class StoreRoomRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules for a new room.
+     * Get the validation rules for a new room type.
      *
      * @return array<string, list<mixed>>
      */
@@ -27,7 +27,7 @@ class StoreRoomRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('rooms', 'name'),
+                Rule::unique('room_types', 'name'),
             ],
             'price' => ['required', 'integer', 'min:0'],
             'description' => ['required', 'string', 'max:2000'],
@@ -43,10 +43,10 @@ class StoreRoomRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => 'room name',
+            'name' => 'room type name',
             'price' => 'price per night',
             'description' => 'description',
-            'image' => 'room image',
+            'image' => 'room type image',
         ];
     }
 }

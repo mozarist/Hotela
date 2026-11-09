@@ -2,42 +2,40 @@
 
 namespace Database\Seeders;
 
+use App\Enums\RoomStatus;
 use App\Models\Room;
+use App\Models\RoomType;
 use Illuminate\Database\Seeder;
 
 class RoomSeeder extends Seeder
 {
     /**
-     * Seed the room catalogue used by the landing page and booking form.
+     * Seed the physical room units for every room type.
      */
     public function run(): void
     {
-        $rooms = [
-            [
-                'name' => 'Standar',
-                'price' => 450000,
-                'description' => 'A calm, compact retreat with a queen bed, rain shower, smart TV, and complimentary Wi-Fi for a restful city stay.',
-                'image_path' => 'rooms/standar.jpg',
-            ],
-            [
-                'name' => 'Deluxe',
-                'price' => 750000,
-                'description' => 'A spacious room with a king bed, lounge corner, city view, premium amenities, and a curated minibar.',
-                'image_path' => 'rooms/deluxe.jpg',
-            ],
-            [
-                'name' => 'Family',
-                'price' => 1200000,
-                'description' => 'Two connected bedrooms, a private living area, and thoughtful family amenities for a comfortable group escape.',
-                'image_path' => 'rooms/family.jpg',
-            ],
+        $units = [
+            'Standar' => ['101', '102', '103', '104'],
+            'Deluxe' => ['201', '202', '203', '204'],
+            'Family' => ['301', '302'],
         ];
 
-        foreach ($rooms as $room) {
-            Room::query()->updateOrCreate(
-                ['name' => $room['name']],
-                $room,
-            );
+        $statuses = RoomStatus::cases();
+
+        foreach ($units as $roomTypeName => $roomNumbers) {
+            $roomType = RoomType::query()
+                ->where('name', $roomTypeName)
+                ->firstOrFail();
+
+            foreach ($roomNumbers as $index => $roomNumber) {
+                Room::query()->updateOrCreate(
+                    ['room_number' => $roomNumber],
+                    [
+                        'room_type_id' => $roomType->id,
+                        'status' => $statuses[$index % count($statuses)],
+                    ],
+                );
+            }
         }
     }
 }

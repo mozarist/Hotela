@@ -106,8 +106,8 @@ export default function BookingSummary({
                     <CardContent className="space-y-8 p-5 md:p-8">
                         <div className="grid gap-6 md:grid-cols-[240px_minmax(0,1fr)]">
                             <RoomImage
-                                src={booking.room.image_url}
-                                alt={`${booking.room.name} room`}
+                                src={booking.room_type.image_url}
+                                alt={`${booking.room_type.name} room`}
                                 className="h-44 w-full rounded-2xl object-cover md:h-full"
                             />
 
@@ -117,10 +117,10 @@ export default function BookingSummary({
                                         Room
                                     </p>
                                     <h2 className="mt-1 font-serif text-3xl">
-                                        {booking.room.name} Room
+                                        {booking.room_type.name} Room
                                     </h2>
                                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                                        {booking.room.description}
+                                        {booking.room_type.description}
                                     </p>
                                 </div>
 
@@ -193,7 +193,9 @@ export default function BookingSummary({
                                 <div className="space-y-2.5 rounded-2xl border p-4 text-sm">
                                     <div className="flex items-center justify-between gap-4">
                                         <span className="text-muted-foreground">
-                                            {formatCurrency(booking.room.price)}{' '}
+                                            {formatCurrency(
+                                                booking.room_type.price,
+                                            )}{' '}
                                             × {booking.duration_days} night
                                             {booking.duration_days === 1
                                                 ? ''

@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Room;
+use App\Models\RoomType;
 use InvalidArgumentException;
 
 class BookingCalculatorService
@@ -23,7 +23,7 @@ class BookingCalculatorService
     public const MIN_DISCOUNT_DURATION = 3;
 
     /**
-     * Calculate the full booking breakdown from trusted room data.
+     * Calculate the full booking breakdown from trusted room type data.
      *
      * @return array{
      *     price_per_night: int,
@@ -36,13 +36,13 @@ class BookingCalculatorService
      *
      * @throws InvalidArgumentException
      */
-    public function calculate(Room $room, int $durationDays, bool $includesBreakfast): array
+    public function calculate(RoomType $roomType, int $durationDays, bool $includesBreakfast): array
     {
         if ($durationDays < 1) {
             throw new InvalidArgumentException('Booking duration must be at least one day.');
         }
 
-        $pricePerNight = (int) $room->price;
+        $pricePerNight = (int) $roomType->price;
         $subtotal = $pricePerNight * $durationDays;
 
         $includesDiscount = $durationDays > self::MIN_DISCOUNT_DURATION;

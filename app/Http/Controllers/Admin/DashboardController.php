@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
-use App\Models\Room;
+use App\Models\RoomType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -21,17 +21,17 @@ class DashboardController extends Controller
     public function index(Request $request): Response
     {
         $search = trim($request->string('search')->toString());
-        $roomId = $request->integer('room_id');
+        $roomTypeId = $request->integer('room_type_id');
 
         $bookings = Booking::query()
-            ->with('room')
+            ->with('roomType')
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($query) use ($search): void {
                     $query->where('guest_name', 'like', "%{$search}%")
                         ->orWhere('identity_number', 'like', "%{$search}%");
                 });
             })
-            ->when($roomId > 0, fn ($query) => $query->where('room_id', $roomId))
+            ->when($roomTypeId > 0, fn ($query) => $query->where('room_type_id', $roomTypeId))
             ->latest('created_at')
             ->latest('id')
             ->paginate(10)
@@ -47,21 +47,21 @@ class DashboardController extends Controller
                 'discount_amount' => $booking->discount_amount,
                 'total_payment' => $booking->total_payment,
                 'created_at' => $booking->created_at?->toIso8601String(),
-                'room' => [
-                    'id' => $booking->room->id,
-                    'name' => $booking->room->name,
-                    'price' => $booking->room->price,
+                'room_type' => [
+                    'id' => $booking->roomType->id,
+                    'name' => $booking->roomType->name,
+                    'price' => $booking->roomType->price,
                 ],
             ]);
 
         return Inertia::render('dashboard', [
             'bookings' => $bookings,
-            'rooms' => Room::query()
+            'roomTypes' => RoomType::query()
                 ->orderBy('price')
                 ->get(['id', 'name', 'price']),
             'filters' => [
                 'search' => $search,
-                'room_id' => $roomId > 0 ? $roomId : null,
+                'room_type_id' => $roomTypeId > 0 ? $roomTypeId : null,
             ],
             'summary' => [
                 'totalBookings' => Booking::query()->count(),
