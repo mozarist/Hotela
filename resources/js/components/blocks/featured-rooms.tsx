@@ -12,14 +12,11 @@ export default function FeaturedRooms({
 }) {
     return (
         <section id="rooms" className="w-full scroll-mt-24">
-            <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4">
+            <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4">
                 <div className="flex w-full flex-col items-start justify-between gap-5 md:flex-row md:items-center">
                     <div>
-                        <p className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
-                            The collection
-                        </p>
                         <h2 className="mt-2 font-serif text-4xl md:text-5xl">
-                            Rooms made for you
+                            Featured Rooms
                         </h2>
                     </div>
 

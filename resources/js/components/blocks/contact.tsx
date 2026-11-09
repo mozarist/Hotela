@@ -36,9 +36,9 @@ export default function Contact() {
     const mapsEmbedSrc = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
 
     return (
-        <>
+        <div className="flex w-full flex-col gap-4 max-w-7xl px-4 mx-auto">
             {/* Header */}
-            <section className="flex w-full max-w-7xl flex-col gap-3 px-4">
+            <section className="flex w-full flex-col gap-3">
                 <h1 className="font-serif text-6xl leading-[1.05] font-medium capitalize sm:text-7xl">
                     Contact Us
                 </h1>
@@ -48,7 +48,7 @@ export default function Contact() {
             </section>
 
             {/* Contact info + map */}
-            <section className="grid w-full max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 px-4">
+            <section className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2">
                 {/* Left: contact channels */}
                 <div className="flex flex-col gap-6">
                     {contactItems.map(
@@ -109,6 +109,6 @@ export default function Contact() {
                     </div>
                 </Card>
             </section>
-        </>
+        </div>
     );
 }
