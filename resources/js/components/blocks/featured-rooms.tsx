@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { ArrowRight, Hotel } from 'lucide-react';
+import { ArrowRight, BedDouble, Hotel } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import RoomCard from '@/components/ui/cards/room-card';
 import { booking } from '@/routes';
@@ -12,25 +12,11 @@ export default function FeaturedRooms({
 }) {
     return (
         <section id="rooms" className="w-full scroll-mt-24">
-            <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4">
-                <div className="flex w-full flex-col items-start justify-between gap-5 md:flex-row md:items-center">
-                    <div>
-                        <h2 className="mt-2 font-serif text-4xl md:text-5xl">
-                            Featured Rooms
-                        </h2>
-                    </div>
-
-                    <Button asChild variant="outline">
-                        <Link href={booking.url()}>
-                            <Hotel />
-                            Start a booking
-                            <ArrowRight />
-                        </Link>
-                    </Button>
-                </div>
+            <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4">
+                <h2 className="text-5xl md:text-4xl lg:text-5xl font-serif w-full max-w-sm text-balance capitalize">The best rooms for your stay</h2>
 
                 {roomTypes.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid grid-cols-1 gap-8">
                         {roomTypes.map((roomType) => (
                             <RoomCard key={roomType.id} roomType={roomType} />
                         ))}
