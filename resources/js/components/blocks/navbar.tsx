@@ -45,18 +45,6 @@ export default function NavBar() {
                     </div>
 
                     <div className="flex flex-1 items-center justify-end gap-2">
-                        {auth?.user ? (
-                            <Button asChild variant="outline">
-                                <Link href="/dashboard">
-                                    <LayoutDashboard />
-                                    Dashboard
-                                </Link>
-                            </Button>
-                        ) : (
-                            <Button asChild variant="ghost">
-                                <Link href={login.url()}>Sign in</Link>
-                            </Button>
-                        )}
                         <Button
                             asChild
                             size="sm"
