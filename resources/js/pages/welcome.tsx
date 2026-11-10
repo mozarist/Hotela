@@ -40,15 +40,18 @@ export default function Welcome({ roomTypes }: { roomTypes: RoomType[] }) {
                 <OurServices />
 
                 {/* mini gallery */}
-                <div className="max-w-7xl grid md:grid-cols-3 justify-center gap-4 px-4 w-full">
-                    <div className="aspect-square w-full bg-muted overflow-hidden rounded-3xl">
+                <div className="max-w-7xl grid md:grid-cols-2 xl:grid-cols-4 justify-center -gap-4 px-4 w-full">
+                    <div className="aspect-square w-full bg-muted overflow-hidden rounded-3xl rotate-3 border-6 border-background">
                         <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" alt="Room 1" className="h-full w-full object-cover" />
                     </div>
-                    <div className="aspect-square w-full bg-muted overflow-hidden rounded-3xl">
-                        <img src="https://images.unsplash.com/photo-1549294413-26f195200c16?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" alt="Room 2" className="h-full w-full object-cover" />
-                    </div>
-                    <div className="aspect-square w-full bg-muted overflow-hidden rounded-3xl">
+                    <div className="aspect-square w-full bg-muted overflow-hidden rounded-3xl -rotate-3 border-6 border-background">
                         <img src="https://images.unsplash.com/photo-1758380388614-66e9fd1aa159?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" alt="Room 3" className="h-full w-full object-cover" />
+                    </div>
+                    <div className="aspect-square w-full bg-muted overflow-hidden rounded-3xl rotate-3 border-6 border-background">
+                        <img src="https://images.unsplash.com/photo-1596701062351-8c2c14d1fdd0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" alt="Room 3" className="h-full w-full object-cover" />
+                    </div>
+                    <div className="aspect-square w-full bg-muted overflow-hidden rounded-3xl -rotate-3 border-6 border-background">
+                        <img src="https://images.unsplash.com/photo-1549294413-26f195200c16?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" alt="Room 2" className="h-full w-full object-cover" />
                     </div>
                 </div>
 
