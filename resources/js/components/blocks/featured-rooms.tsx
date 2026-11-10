@@ -13,7 +13,7 @@ export default function FeaturedRooms({
     return (
         <section id="rooms" className="w-full scroll-mt-24">
             <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4">
-                <h2 className="text-5xl md:text-4xl lg:text-5xl font-serif w-full max-w-sm text-balance capitalize">The best rooms for your stay</h2>
+                <h2 className="text-5xl md:text-4xl lg:text-5xl xl:text-6xl font-serif w-full text-center text-balance capitalize">The best rooms for your stay</h2>
 
                 {roomTypes.length > 0 ? (
                     <div className="grid grid-cols-1 gap-8">

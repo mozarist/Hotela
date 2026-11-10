@@ -10,7 +10,7 @@ export default function Welcome({ roomTypes }: { roomTypes: RoomType[] }) {
         <>
             <Head title="Find the best stay" />
 
-            <div className="relative -mt-16 flex w-full flex-col items-center gap-20 overflow-hidden">
+            <div className="relative -mt-16 flex w-full flex-col items-center gap-24 overflow-hidden">
                 <HeroSection />
 
                 {/* About Section */}
@@ -38,6 +38,20 @@ export default function Welcome({ roomTypes }: { roomTypes: RoomType[] }) {
                 </div>
 
                 <OurServices />
+
+                {/* mini gallery */}
+                <div className="max-w-7xl grid md:grid-cols-3 justify-center gap-4 px-4 w-full">
+                    <div className="aspect-square w-full bg-muted overflow-hidden rounded-3xl">
+                        <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" alt="Room 1" className="h-full w-full object-cover" />
+                    </div>
+                    <div className="aspect-square w-full bg-muted overflow-hidden rounded-3xl">
+                        <img src="https://images.unsplash.com/photo-1549294413-26f195200c16?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" alt="Room 2" className="h-full w-full object-cover" />
+                    </div>
+                    <div className="aspect-square w-full bg-muted overflow-hidden rounded-3xl">
+                        <img src="https://images.unsplash.com/photo-1758380388614-66e9fd1aa159?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D" alt="Room 3" className="h-full w-full object-cover" />
+                    </div>
+                </div>
+
                 <FeaturedRooms roomTypes={roomTypes} />
                 <Contact />
             </div>

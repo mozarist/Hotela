@@ -39,7 +39,7 @@ export default function Contact() {
         <div className="flex w-full flex-col gap-8 max-w-7xl px-4 mx-auto">
             {/* Header */}
             <section className="flex w-full flex-col gap-3">
-                <h1 className="font-serif text-6xl leading-[1.05] font-medium capitalize sm:text-7xl">
+                <h1 className="font-serif text-6xl leading-[1.05] font-medium capitalize text-5xl md:text-4xl lg:text-5xl xl:text-6xl">
                     Contact Us
                 </h1>
                 <p className="max-w-2xl text-base leading-relaxed text-muted-foreground text-balance">
