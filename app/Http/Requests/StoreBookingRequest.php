@@ -23,7 +23,7 @@ class StoreBookingRequest extends FormRequest
     {
         return [
             'room_type_id' => ['required', 'integer', 'exists:room_types,id'],
-            'guest_name' => ['required', 'string', 'max:255'],
+            'guest_name' => ['required', 'string', 'max:255', 'not_regex:/[0-9]/'],
             'gender' => ['required', 'string', 'in:Laki-laki,Perempuan'],
             'identity_number' => ['required', 'digits:16'],
             'booking_date' => ['required', 'date'],
@@ -42,6 +42,7 @@ class StoreBookingRequest extends FormRequest
         return [
             'identity_number.digits' => 'isian salah..data harus 16 digit',
             'identity_number.required' => 'isian salah..data harus 16 digit',
+            'guest_name.not_regex' => 'nama tamu tidak boleh mengandung angka',
             'duration_days.numeric' => 'harus isi angka',
             'duration_days.integer' => 'harus isi angka',
             'duration_days.required' => 'harus isi angka',

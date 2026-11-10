@@ -87,6 +87,24 @@ test('the identity number must contain exactly sixteen digits', function () {
     ]);
 });
 
+test('the guest name must not contain numbers', function () {
+    $roomType = RoomType::factory()->create();
+
+    $response = $this->post(route('bookings.store'), [
+        'room_type_id' => $roomType->id,
+        'guest_name' => 'Alya Putri 2',
+        'gender' => 'Perempuan',
+        'identity_number' => '3171012304950001',
+        'booking_date' => now()->toDateString(),
+        'duration_days' => 2,
+        'includes_breakfast' => false,
+    ]);
+
+    $response->assertSessionHasErrors([
+        'guest_name' => 'nama tamu tidak boleh mengandung angka',
+    ]);
+});
+
 test('the duration must be numeric', function () {
     $roomType = RoomType::factory()->create();
 
