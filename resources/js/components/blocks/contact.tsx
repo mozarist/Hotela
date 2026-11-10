@@ -36,13 +36,13 @@ export default function Contact() {
     const mapsEmbedSrc = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
 
     return (
-        <div className="flex w-full flex-col gap-4 max-w-7xl px-4 mx-auto">
+        <div className="flex w-full flex-col gap-8 max-w-7xl px-4 mx-auto">
             {/* Header */}
             <section className="flex w-full flex-col gap-3">
                 <h1 className="font-serif text-6xl leading-[1.05] font-medium capitalize sm:text-7xl">
                     Contact Us
                 </h1>
-                <p className="max-w-2xl text-lg leading-relaxed text-muted-foreground">
+                <p className="max-w-2xl text-base leading-relaxed text-muted-foreground text-balance">
                     Have questions or need assistance? Reach out to us through any of the channels below, and our team will be happy to help you.
                 </p>
             </section>
@@ -81,11 +81,7 @@ export default function Contact() {
                 </div>
 
                 {/* Right: location / map */}
-                <Card className="px-6">
-                    <h2 className="text-xl font-medium">
-                        Our Location
-                    </h2>
-
+                <div className="flex flex-col gap-4">
                     <div className="overflow-hidden rounded-lg border border-border">
                         <iframe
                             title="Hotela Location"
@@ -107,7 +103,7 @@ export default function Contact() {
                             {address}
                         </p>
                     </div>
-                </Card>
+                </div>
             </section>
         </div>
     );
