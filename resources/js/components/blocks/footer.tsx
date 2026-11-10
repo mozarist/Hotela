@@ -9,7 +9,7 @@ const navLinks = [
 
 export function Footer() {
     return (
-        <footer className="mx-auto max-w-7xl w-full px-4">
+        <footer className="mx-auto max-w-7xl w-full px-4 print:hidden">
             <div className="flex flex-col sm:flex-row gap-6 sm:justify-between sm:items-center py-6">
                 <h5 className="text-2xl text-primary font-medium">
                     Hotela

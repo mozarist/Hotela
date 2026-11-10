@@ -7,7 +7,6 @@ import {
     Coffee,
     Download,
     IdCard,
-    Printer,
     ReceiptText,
     UserRound,
 } from 'lucide-react';
@@ -44,7 +43,7 @@ function DetailRow({
                 <p className="text-xs tracking-wide text-muted-foreground">
                     {label}
                 </p>
-                <p className="mt-0.5 text-sm font-medium wrap-break-words">
+                <p className="wrap-break-words mt-0.5 text-sm font-medium">
                     {value}
                 </p>
             </div>
@@ -57,20 +56,24 @@ export default function BookingSummary({
 }: {
     booking: BookingInvoice;
 }) {
+    function downloadInvoice() {
+        window.print();
+    }
+
     return (
         <>
             <Head title={`Booking ${bookingReference(booking.id)}`} />
 
-            <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-10 md:py-14">
+            <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-10 md:py-14 print:block print:max-w-none print:p-0">
                 <Link
                     href={home.url()}
-                    className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground print:hidden"
                 >
                     <ArrowLeft className="size-4" />
                     Back to home
                 </Link>
 
-                <div className="space-y-2">
+                <div className="space-y-2 print:hidden">
                     <h1 className="mt-3 font-serif text-4xl md:text-5xl">
                         Booking confirmed.
                     </h1>
@@ -80,7 +83,10 @@ export default function BookingSummary({
                     </p>
                 </div>
 
-                <Card className="overflow-hidden">
+                <Card
+                    id="booking-invoice"
+                    className="overflow-hidden print:hidden"
+                >
                     <CardHeader className="border-b">
                         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                             <AppLogo />
@@ -151,9 +157,7 @@ export default function BookingSummary({
                                 </h3>
                                 <div className="rounded-2xl border bg-muted/20 p-4 text-sm">
                                     <div className="flex items-center justify-between gap-4">
-                                        <span>
-                                            Breakfast
-                                        </span>
+                                        <span>Breakfast</span>
                                         <Badge
                                             variant={
                                                 booking.includes_breakfast
@@ -207,8 +211,8 @@ export default function BookingSummary({
                                         <span>
                                             {booking.breakfast_fee > 0
                                                 ? formatCurrency(
-                                                    booking.breakfast_fee,
-                                                )
+                                                      booking.breakfast_fee,
+                                                  )
                                                 : '-'}
                                         </span>
                                     </div>
@@ -238,8 +242,86 @@ export default function BookingSummary({
                     </CardContent>
                 </Card>
 
-                <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-                    <Button variant="outline" onClick={() => window.print()}>
+                <div className="invoice-ticket hidden print:block">
+                    <div className="invoice-ticket__header flex flex-col items-center gap-2">
+                        <AppLogo />
+                        <p className="invoice-ticket__subtitle">
+                            Your booking has been confirmed successfully
+                        </p>
+                    </div>
+
+                    <div className="invoice-ticket__body">
+                        <div className="invoice-ticket__dash" />
+
+                        <div className="invoice-ticket__summary">
+                            <div>
+                                <p className="invoice-ticket__label">
+                                    INVOICE ID
+                                </p>
+                                <p className="invoice-ticket__value font-mono">
+                                    {bookingReference(booking.id)}
+                                </p>
+                            </div>
+                            <div className="text-right">
+                                <p className="invoice-ticket__label">TOTAL</p>
+                                <p className="invoice-ticket__value">
+                                    {formatCurrency(booking.total_payment)}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="mt-6">
+                            <p className="invoice-ticket__label">DATE & TIME</p>
+                            <p className="invoice-ticket__value">
+                                {formatDateTime(booking.created_at)}
+                            </p>
+                        </div>
+
+                        <div className="invoice-ticket__guest mt-6">
+                            <div>
+                                <p className="font-semibold">
+                                    {booking.guest_name}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                    {booking.room_type.name} Room ·{' '}
+                                    {booking.duration_days} night
+                                    {booking.duration_days === 1 ? '' : 's'}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="mt-6 space-y-2 border-t border-dashed border-gray-300 pt-4 text-sm">
+                            <div className="flex justify-between gap-4">
+                                <span className="text-gray-500">Check-in</span>
+                                <span className="font-medium">
+                                    {formatDate(booking.booking_date)}
+                                </span>
+                            </div>
+                            <div className="flex justify-between gap-4">
+                                <span className="text-gray-500">Breakfast</span>
+                                <span className="font-medium">
+                                    {booking.includes_breakfast
+                                        ? formatCurrency(booking.breakfast_fee)
+                                        : 'Not included'}
+                                </span>
+                            </div>
+                            <div className="flex justify-between gap-4 border-t border-gray-200 pt-2 font-semibold">
+                                <span>Total payment</span>
+                                <span>
+                                    {formatCurrency(booking.total_payment)}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="invoice-ticket__barcode" aria-hidden="true">
+                        <div className="invoice-ticket__bars" />
+                        <span>{bookingReference(booking.id)}</span>
+                    </div>
+                </div>
+
+                <div className="flex flex-col gap-2 sm:flex-row sm:justify-end print:hidden">
+                    <Button variant="outline" onClick={downloadInvoice}>
                         <Download />
                         Download invoice
                     </Button>
