@@ -1,6 +1,5 @@
 import { Link } from '@inertiajs/react';
 import { ArrowRight, CircleArrowRight } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { booking } from '@/routes';
 
@@ -8,8 +7,8 @@ export default function HeroSection() {
     return (
         <section className="mx-auto flex w-full min-h-screen max-w-7xl flex-col items-center justify-between gap-10 px-4 md:flex-row md:gap-12">
             <div className="flex flex-1 flex-col items-center gap-6 md:items-start">
-                <h1 className="max-w-xl text-center font-serif text-6xl leading-[0.95] tracking-tight text-primary md:text-start lg:text-8xl">
-                    Moments worth staying for.
+                <h1 className="max-w-xl text-center font-serif text-6xl leading-[0.95] tracking-tight text-primary md:text-start lg:text-8xl capitalize">
+                    Moments <span className="italic">worth staying</span> for.
                 </h1>
 
                 <p className="max-w-md text-center text-base leading-relaxed text-muted-foreground md:text-start">
