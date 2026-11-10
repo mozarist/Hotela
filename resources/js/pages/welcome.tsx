@@ -358,7 +358,7 @@ export default function Welcome({ roomTypes }: { roomTypes: RoomType[] }) {
                     </CardContent>
                 </section>
 
-                <Contact />
+                {/* <Contact /> */}
             </div>
         </>
     );
