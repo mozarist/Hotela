@@ -5,6 +5,7 @@ import {
     CalendarDays,
     CheckCircle2,
     Coffee,
+    Download,
     IdCard,
     Printer,
     ReceiptText,
@@ -40,10 +41,10 @@ function DetailRow({
                 <Icon className="size-4 text-muted-foreground" />
             </div>
             <div className="min-w-0">
-                <p className="text-xs tracking-wide text-muted-foreground uppercase">
+                <p className="text-xs tracking-wide text-muted-foreground">
                     {label}
                 </p>
-                <p className="mt-0.5 text-sm font-medium break-words">
+                <p className="mt-0.5 text-sm font-medium wrap-break-words">
                     {value}
                 </p>
             </div>
@@ -60,37 +61,31 @@ export default function BookingSummary({
         <>
             <Head title={`Booking ${bookingReference(booking.id)}`} />
 
-            <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-10 md:py-14">
-                <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-                    <div>
-                        <Link
-                            href={home.url()}
-                            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                        >
-                            <ArrowLeft className="size-4" />
-                            Back to home
-                        </Link>
-                        <h1 className="mt-3 font-serif text-4xl md:text-5xl">
-                            Booking confirmed.
-                        </h1>
-                        <p className="mt-2 text-sm text-muted-foreground">
-                            Your stay is reserved. Keep this invoice for your
-                            records.
-                        </p>
-                    </div>
+            <div className="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-10 md:py-14">
+                <Link
+                    href={home.url()}
+                    className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                >
+                    <ArrowLeft className="size-4" />
+                    Back to home
+                </Link>
 
-                    <Badge className="h-auto gap-1.5 px-3 py-1.5">
-                        <CheckCircle2 className="size-3.5" />
-                        Confirmed
-                    </Badge>
+                <div className="space-y-2">
+                    <h1 className="mt-3 font-serif text-4xl md:text-5xl">
+                        Booking confirmed.
+                    </h1>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                        Your stay is reserved. Keep this invoice for your
+                        records.
+                    </p>
                 </div>
 
                 <Card className="overflow-hidden">
-                    <CardHeader className="border-b bg-muted/30">
+                    <CardHeader className="border-b">
                         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                             <AppLogo />
                             <div className="text-left sm:text-right">
-                                <p className="text-xs tracking-wide text-muted-foreground uppercase">
+                                <p className="text-xs tracking-wide text-muted-foreground">
                                     Invoice
                                 </p>
                                 <p className="font-mono text-sm font-semibold">
@@ -103,7 +98,7 @@ export default function BookingSummary({
                         </div>
                     </CardHeader>
 
-                    <CardContent className="space-y-8 p-5 md:p-8">
+                    <CardContent className="space-y-4">
                         <div className="grid gap-6 md:grid-cols-[240px_minmax(0,1fr)]">
                             <RoomImage
                                 src={booking.room_type.image_url}
@@ -113,9 +108,6 @@ export default function BookingSummary({
 
                             <div className="space-y-6">
                                 <div>
-                                    <p className="text-xs font-semibold tracking-[0.2em] text-muted-foreground uppercase">
-                                        Room
-                                    </p>
                                     <h2 className="mt-1 font-serif text-3xl">
                                         {booking.room_type.name} Room
                                     </h2>
@@ -155,11 +147,11 @@ export default function BookingSummary({
                             <div className="space-y-3">
                                 <h3 className="flex items-center gap-2 font-medium">
                                     <Coffee className="size-4 text-muted-foreground" />
-                                    Inclusions
+                                    Additional services
                                 </h3>
                                 <div className="rounded-2xl border bg-muted/20 p-4 text-sm">
                                     <div className="flex items-center justify-between gap-4">
-                                        <span className="text-muted-foreground">
+                                        <span>
                                             Breakfast
                                         </span>
                                         <Badge
@@ -173,14 +165,6 @@ export default function BookingSummary({
                                                 ? 'Included'
                                                 : 'Not included'}
                                         </Badge>
-                                    </div>
-                                    <div className="mt-3 flex items-center justify-between gap-4">
-                                        <span className="text-muted-foreground">
-                                            Wi-Fi & facilities
-                                        </span>
-                                        <span className="text-sm font-medium">
-                                            Included
-                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -223,17 +207,17 @@ export default function BookingSummary({
                                         <span>
                                             {booking.breakfast_fee > 0
                                                 ? formatCurrency(
-                                                      booking.breakfast_fee,
-                                                  )
+                                                    booking.breakfast_fee,
+                                                )
                                                 : '-'}
                                         </span>
                                     </div>
                                     <Separator className="my-1" />
-                                    <div className="flex items-end justify-between gap-4">
+                                    <div className="flex items-center justify-between gap-4">
                                         <span className="font-medium">
                                             Total payment
                                         </span>
-                                        <span className="font-serif text-3xl">
+                                        <span className="font-serif text-xl">
                                             {formatCurrency(
                                                 booking.total_payment,
                                             )}
@@ -256,8 +240,8 @@ export default function BookingSummary({
 
                 <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
                     <Button variant="outline" onClick={() => window.print()}>
-                        <Printer />
-                        Print invoice
+                        <Download />
+                        Download invoice
                     </Button>
                     <Button asChild>
                         <Link href={bookingRoute.url()}>

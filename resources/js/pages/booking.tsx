@@ -126,11 +126,8 @@ export default function Booking({
 
             <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-10 md:py-14">
                 <div className="max-w-2xl">
-                    <p className="text-xs font-semibold tracking-[0.24em] text-muted-foreground uppercase">
-                        Reserve your stay
-                    </p>
                     <h1 className="mt-2 font-serif text-4xl md:text-5xl">
-                        A few details, then relax.
+                        Reserve your room and enjoy a comfortable stay
                     </h1>
                     <p className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
                         Choose a room, set your dates, and see your total update
@@ -204,30 +201,6 @@ export default function Booking({
                                         message={form.errors.room_type_id}
                                     />
                                 </div>
-
-                                {selectedRoomType && (
-                                    <div className="flex gap-4 rounded-2xl border bg-muted/30 p-3">
-                                        <RoomImage
-                                            src={selectedRoomType.image_url}
-                                            alt={`${selectedRoomType.name} room`}
-                                            className="h-24 w-28 shrink-0 rounded-xl object-cover"
-                                        />
-                                        <div className="flex min-w-0 flex-col justify-center">
-                                            <div className="flex items-center gap-2">
-                                                <h3 className="truncate font-medium">
-                                                    {selectedRoomType.name} Room
-                                                </h3>
-                                                <Badge variant="secondary">
-                                                    <Sparkles />
-                                                    Featured
-                                                </Badge>
-                                            </div>
-                                            <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                                                {selectedRoomType.description}
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
 
                                 <div className="grid gap-5 sm:grid-cols-2">
                                     <div className="space-y-2">
@@ -396,9 +369,9 @@ export default function Booking({
                                                     event.target.value === ''
                                                         ? ''
                                                         : Number(
-                                                              event.target
-                                                                  .value,
-                                                          ),
+                                                            event.target
+                                                                .value,
+                                                        ),
                                                 )
                                             }
                                             disabled={form.processing}
@@ -446,120 +419,116 @@ export default function Booking({
                         </Card>
                     </div>
 
-                    <Card className="lg:sticky lg:top-24">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <ReceiptText className="size-5 text-muted-foreground" />
-                                Your estimate
-                            </CardTitle>
-                            <CardDescription>
-                                Live preview. The final amount is recalculated
-                                securely when you submit.
-                            </CardDescription>
-                        </CardHeader>
+                    <div className="flex flex-col gap-2 lg:sticky lg:top-24">
 
-                        <CardContent className="space-y-4">
-                            <div className="rounded-2xl bg-muted/50 p-4">
-                                <p className="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
-                                    Total payment
+                        {selectedRoomType && (
+                            <Card>
+                                <CardContent className="flex items-center gap-4">
+                                    <RoomImage
+                                        src={selectedRoomType.image_url}
+                                        alt={`${selectedRoomType.name} room`}
+                                        className="h-24 w-28 shrink-0 rounded-xl object-cover"
+                                    />
+                                    <div className="flex min-w-0 flex-col justify-center">
+                                        <h3 className="truncate font-medium">
+                                            {selectedRoomType.name} Room
+                                        </h3>
+                                        <p className="mt-1 line-clamp-2 text-sm text-muted-foreground w-4/5">
+                                            {selectedRoomType.description}
+                                        </p>
+                                    </div>
+                                </CardContent >
+                            </Card>
+                        )}
+
+                        <Card>
+                            <CardContent className="space-y-4">
+                                <p className="text-sm font-medium">
+                                    Total Payment
                                 </p>
-                                <p className="mt-1 font-serif text-4xl">
-                                    {formatCurrency(totalPayment)}
-                                </p>
-                                <p className="mt-1 text-xs text-muted-foreground">
-                                    {durationDays} night
-                                    {durationDays === 1 ? '' : 's'} ·{' '}
-                                    {selectedRoomType?.name ??
-                                        'No room selected'}
-                                </p>
-                            </div>
 
-                            <div className="space-y-3 text-sm">
-                                <div className="flex items-center justify-between gap-3">
-                                    <span className="text-muted-foreground">
-                                        Room rate
-                                    </span>
-                                    <span>
-                                        {selectedRoomType
-                                            ? `${formatCurrency(selectedRoomType.price)} × ${durationDays}`
-                                            : '-'}
+                                <div className="space-y-3 text-sm">
+                                    <div className="flex items-center justify-between gap-3">
+                                        <span className="text-muted-foreground">
+                                            Room rate
+                                        </span>
+                                        <span>
+                                            {selectedRoomType
+                                                ? `${formatCurrency(selectedRoomType.price)} × ${durationDays}`
+                                                : '-'}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center justify-between gap-3">
+                                        <span className="text-muted-foreground">
+                                            Subtotal
+                                        </span>
+                                        <span>{formatCurrency(subtotal)}</span>
+                                    </div>
+                                    <div className="flex items-center justify-between gap-3">
+                                        <span className="flex items-center gap-1.5 text-muted-foreground">
+                                            Long-stay discount
+                                            {includesDiscount && (
+                                                <Badge
+                                                    variant="secondary"
+                                                    className="h-4 px-1.5 text-[10px]"
+                                                >
+                                                    10%
+                                                </Badge>
+                                            )}
+                                        </span>
+                                        <span
+                                            className={
+                                                discountAmount > 0
+                                                    ? 'font-medium text-emerald-600 dark:text-emerald-400'
+                                                    : ''
+                                            }
+                                        >
+                                            -{formatCurrency(discountAmount)}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center justify-between gap-3">
+                                        <span className="flex items-center gap-1.5 text-muted-foreground">
+                                            <Coffee className="size-3.5" />
+                                            Breakfast
+                                        </span>
+                                        <span>
+                                            {selectedBreakfastFee > 0
+                                                ? formatCurrency(
+                                                    selectedBreakfastFee,
+                                                )
+                                                : 'Not included'}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center justify-between gap-3 border-t pt-4 text-base font-semibold">
+                                    <span>Total</span>
+                                    <span className="font-serif text-xl font-normal">
+                                        {formatCurrency(totalPayment)}
                                     </span>
                                 </div>
-                                <div className="flex items-center justify-between gap-3">
-                                    <span className="text-muted-foreground">
-                                        Subtotal
-                                    </span>
-                                    <span>{formatCurrency(subtotal)}</span>
-                                </div>
-                                <div className="flex items-center justify-between gap-3">
-                                    <span className="flex items-center gap-1.5 text-muted-foreground">
-                                        Long-stay discount
-                                        {includesDiscount && (
-                                            <Badge
-                                                variant="secondary"
-                                                className="h-4 px-1.5 text-[10px]"
-                                            >
-                                                10%
-                                            </Badge>
-                                        )}
-                                    </span>
-                                    <span
-                                        className={
-                                            discountAmount > 0
-                                                ? 'font-medium text-emerald-600 dark:text-emerald-400'
-                                                : ''
-                                        }
-                                    >
-                                        -{formatCurrency(discountAmount)}
-                                    </span>
-                                </div>
-                                <div className="flex items-center justify-between gap-3">
-                                    <span className="flex items-center gap-1.5 text-muted-foreground">
-                                        <Coffee className="size-3.5" />
-                                        Breakfast
-                                    </span>
-                                    <span>
-                                        {selectedBreakfastFee > 0
-                                            ? formatCurrency(
-                                                  selectedBreakfastFee,
-                                              )
-                                            : 'Not included'}
-                                    </span>
-                                </div>
-                            </div>
 
-                            <div className="flex items-center justify-between gap-3 border-t pt-4 text-base font-semibold">
-                                <span>Total</span>
-                                <span className="font-serif text-2xl">
-                                    {formatCurrency(totalPayment)}
-                                </span>
-                            </div>
+                                {includesDiscount && (
+                                    <div className="rounded-xl bg-emerald-50 p-3 text-xs text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+                                        <Check className="mr-1 inline size-3.5" />
+                                        You save {formatCurrency(discountAmount)} on
+                                        this stay.
+                                    </div>
+                                )}
 
-                            {includesDiscount && (
-                                <div className="rounded-xl bg-emerald-50 p-3 text-xs text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
-                                    <Check className="mr-1 inline size-3.5" />
-                                    You save {formatCurrency(discountAmount)} on
-                                    this stay.
-                                </div>
-                            )}
-
-                            <Button
-                                type="submit"
-                                className="w-full"
-                                size="lg"
-                                disabled={form.processing || !selectedRoomType}
-                            >
-                                {form.processing
-                                    ? 'Creating booking...'
-                                    : 'Confirm booking'}
-                            </Button>
-
-                            <p className="text-center text-xs text-muted-foreground">
-                                No payment is taken online. Our team will
-                                contact you after confirmation.
-                            </p>
-                        </CardContent>
-                    </Card>
+                                <Button
+                                    type="submit"
+                                    className="w-full"
+                                    size="lg"
+                                    disabled={form.processing || !selectedRoomType}
+                                >
+                                    {form.processing
+                                        ? 'Creating booking...'
+                                        : 'Confirm booking'}
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </form>
 
                 <p className="text-center text-sm text-muted-foreground">
