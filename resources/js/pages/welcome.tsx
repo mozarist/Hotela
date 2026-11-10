@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react';
-import { ArrowLeft, ArrowRight, Star } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronDown, Star } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Contact from '@/components/blocks/contact';
 import FeaturedRooms from '@/components/blocks/featured-rooms';
@@ -34,6 +34,29 @@ const testimonials = [
         name: 'Nadia Pratama',
         location: 'Jakarta, Indonesia',
         initials: 'NP',
+    },
+];
+
+const faqs = [
+    {
+        question: 'What time are check-in and check-out?',
+        answer: 'Check-in starts at 2:00 PM and check-out is until 12:00 PM. If you need an earlier arrival or a later departure, our team will be happy to help based on availability.',
+    },
+    {
+        question: 'Is breakfast available at the hotel?',
+        answer: 'Yes. Breakfast is available as an optional add-on during booking and is served fresh every morning. The breakfast add-on is charged per night of your stay.',
+    },
+    {
+        question: 'Can I choose my room type when booking?',
+        answer: 'Of course. Select your preferred room type on the booking page, choose your stay duration, and review the complete price before confirming your reservation.',
+    },
+    {
+        question: 'Does the hotel offer rooms for families or groups?',
+        answer: 'Our room types are designed for different kinds of stays. Please contact our team before booking if you need help finding the most comfortable option for your group.',
+    },
+    {
+        question: 'Can I change or cancel my reservation?',
+        answer: 'Reservation changes and cancellations depend on the details of your booking. Please contact us as soon as possible with your booking information so we can assist you.',
     },
 ];
 
@@ -108,8 +131,6 @@ export default function Welcome({ roomTypes }: { roomTypes: RoomType[] }) {
                     </div>
                 </div>
 
-                <OurServices />
-
                 {/* mini gallery */}
                 <div className="-gap-4 grid w-full max-w-7xl justify-center px-4 md:grid-cols-2 xl:grid-cols-4">
                     <div className="aspect-square w-full rotate-3 overflow-hidden rounded-3xl border-6 border-background bg-muted">
@@ -142,6 +163,8 @@ export default function Welcome({ roomTypes }: { roomTypes: RoomType[] }) {
                     </div>
                 </div>
 
+                {/* <OurServices /> */}
+
                 <FeaturedRooms roomTypes={roomTypes} />
 
                 {/* Testimonials Section */}
@@ -159,7 +182,7 @@ export default function Welcome({ roomTypes }: { roomTypes: RoomType[] }) {
                     }}
                     tabIndex={0}
                 >
-                    <Card className="rounded-3xl border-0 bg-muted/50 py-8 shadow-none ring-0 min-h-120 flex justify-center">
+                    <Card className="flex min-h-120 justify-center rounded-3xl border-0 bg-muted/50 py-8 shadow-none ring-0">
                         <CardContent className="grid gap-10 px-6 md:grid-cols-[minmax(180px,0.35fr)_1fr] md:px-12 lg:gap-20">
                             <div className="flex flex-col justify-between gap-8">
                                 <div>
@@ -279,11 +302,10 @@ export default function Welcome({ roomTypes }: { roomTypes: RoomType[] }) {
                                                 index === activeTestimonial
                                             }
                                             aria-label={`Show testimonial from ${item.name}`}
-                                            className={`h-1.5 rounded-full transition-all ${
-                                                index === activeTestimonial
-                                                    ? 'w-10 bg-primary'
-                                                    : 'w-5 bg-primary/20 hover:bg-primary/50'
-                                            }`}
+                                            className={`h-1.5 rounded-full transition-all ${index === activeTestimonial
+                                                ? 'w-10 bg-primary'
+                                                : 'w-5 bg-primary/20 hover:bg-primary/50'
+                                                }`}
                                             onClick={() =>
                                                 showTestimonial(index)
                                             }
@@ -293,6 +315,47 @@ export default function Welcome({ roomTypes }: { roomTypes: RoomType[] }) {
                             </div>
                         </CardContent>
                     </Card>
+                </section>
+
+                <section
+                    className="w-full max-w-7xl"
+                    aria-labelledby="faq-title"
+                >
+                    <CardContent className="grid gap-10 md:grid-cols-2 lg:gap-20">
+                        <div>
+                            <h2
+                                id="faq-title"
+                                className="mt-5 max-w-sm font-serif text-5xl md:text-4xl lg:text-5xl xl:text-6xl capitalize"
+                            >
+                                Frequently asked{' '}
+                                <span className="italic">questions</span>
+                            </h2>
+                            <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted-foreground md:text-base">
+                                Everything you need to know before making
+                                your stay at Hotela.
+                            </p>
+                        </div>
+
+                        <div className="divide-y divide-border">
+                            {faqs.map((faq) => (
+                                <details
+                                    key={faq.question}
+                                    className="group py-5 first:pt-0 last:pb-0"
+                                >
+                                    <summary className="flex cursor-pointer list-none items-center justify-between gap-6 text-base font-medium marker:hidden">
+                                        {faq.question}
+                                        <ChevronDown
+                                            className="size-5 shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180"
+                                            aria-hidden="true"
+                                        />
+                                    </summary>
+                                    <p className="max-w-2xl pt-4 pr-8 text-sm leading-relaxed text-muted-foreground md:text-base">
+                                        {faq.answer}
+                                    </p>
+                                </details>
+                            ))}
+                        </div>
+                    </CardContent>
                 </section>
 
                 <Contact />
