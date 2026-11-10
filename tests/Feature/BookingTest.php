@@ -61,7 +61,7 @@ test('a guest can create a booking and the server calculates the invoice', funct
     $booking = Booking::query()->firstOrFail();
 
     expect($booking->discount_amount)->toBe(200000)
-        ->and($booking->total_payment)->toBe(1880000)
+        ->and($booking->total_payment)->toBe(2120000)
         ->and($booking->includes_breakfast)->toBeTrue();
 
     $response

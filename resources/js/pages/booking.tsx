@@ -97,7 +97,7 @@ export default function Booking({
         ? Math.round(subtotal * discountRate)
         : 0;
     const selectedBreakfastFee = form.data.includes_breakfast
-        ? breakfastFee
+        ? breakfastFee * durationDays
         : 0;
     const totalPayment = Math.max(
         0,

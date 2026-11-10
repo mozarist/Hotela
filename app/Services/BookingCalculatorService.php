@@ -8,7 +8,7 @@ use InvalidArgumentException;
 class BookingCalculatorService
 {
     /**
-     * Flat breakfast charge per booking.
+     * Breakfast charge per night.
      */
     public const BREAKFAST_FEE = 80000;
 
@@ -50,7 +50,9 @@ class BookingCalculatorService
             ? (int) round($subtotal * self::LONG_STAY_DISCOUNT_RATE)
             : 0;
 
-        $breakfastFee = $includesBreakfast ? self::BREAKFAST_FEE : 0;
+        $breakfastFee = $includesBreakfast
+            ? self::BREAKFAST_FEE * $durationDays
+            : 0;
         $totalPayment = $subtotal - $discountAmount + $breakfastFee;
 
         return [
