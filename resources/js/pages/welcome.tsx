@@ -131,6 +131,8 @@ export default function Welcome({ roomTypes }: { roomTypes: RoomType[] }) {
                     </div>
                 </div>
 
+                <OurServices />
+
                 {/* mini gallery */}
                 <div className="-gap-4 grid w-full max-w-7xl justify-center px-4 md:grid-cols-2 xl:grid-cols-4">
                     <div className="aspect-square w-full rotate-3 overflow-hidden rounded-3xl border-6 border-background bg-muted">
@@ -162,8 +164,6 @@ export default function Welcome({ roomTypes }: { roomTypes: RoomType[] }) {
                         />
                     </div>
                 </div>
-
-                {/* <OurServices /> */}
 
                 <FeaturedRooms roomTypes={roomTypes} />
 
